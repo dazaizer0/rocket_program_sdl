@@ -35,6 +35,10 @@ bld/
 
 # Visual Studio 2015/2017 cache/options directory
 .vs/
+
+# JetBrains CLion cache/options directory
+.idea/
+
 # Uncomment if you have tasks that create the project's static files in wwwroot
 #wwwroot/
 
@@ -361,6 +365,3 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
-
-# JetBrains IDE
-.idea
