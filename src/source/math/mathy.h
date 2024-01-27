@@ -1,0 +1,133 @@
+#pragma once
+
+#include "../../config.h"
+
+namespace mathy {
+    template <typename T>
+    class vec2 {
+    public:
+        T x {};
+        T y {};
+
+        vec2(T xValue, T yValue)
+                : x(xValue), y(yValue) {}
+
+        void out() {
+            std::cout << "x: " << x << "\n";
+            std::cout << "y: " << y << "\n";
+        }
+
+        vec2<T> operator=(const vec2<T>& other) {
+            return vec2<T>(x = other.x, y = other.y);
+        }
+
+        vec2<T> operator+(const vec2<T>& other) const {
+            return vec2<T>(x + other.x, y + other.y);
+        }
+
+        vec2<T> operator-(const vec2<T>& other) const {
+            return vec2<T>(x - other.x, y - other.y);
+        }
+
+        vec2<T> operator*(const vec2<T>& other) const {
+            return vec2<T>(x * other.x, y * other.y);
+        }
+
+        vec2<T> operator/(const vec2<T>& other) const {
+            return vec2<T>(x / other.x, y / other.y);
+        }
+
+        static vec2<T> CUSTOM(T x, T y) { return {x, y}; };
+
+        static vec2<T> ZERO() { return {T(0), T(0)}; };
+        static vec2<T> ONE() { return {T(1), T(1)}; };
+
+        static vec2<T> UP() { return {T(0), T(1)}; };
+        static vec2<T> DOWN() { return {T(0), T(-1)}; };
+        static vec2<T> RIGHT() { return {T(1), T(0)}; };
+        static vec2<T> LEFT() { return {T(-1), T(0)}; };
+    };
+
+    template <typename T>
+    class vec3 {
+    public:
+        T x {};
+        T y {};
+        T z {};
+
+        vec3(T xValue, T yValue, T zValue)
+                : x(xValue), y(yValue), z(zValue) {}
+
+        void out() {
+            std::cout << "x: " << x << "\n";
+            std::cout << "y: " << y << "\n";
+            std::cout << "z: " << z << "\n";
+        }
+
+        vec3<T> operator=(const vec3<T>& other) {
+            return vec3<T>(x = other.x, y = other.y, z = other.z);
+        }
+
+        vec3<T> operator+(const vec3<T>& other) const {
+            return vec3<T>(x + other.x, y + other.y, z + other.z);
+        }
+
+        vec3<T> operator-(const vec3<T>& other) const {
+            return vec3<T>(x - other.x, y - other.y, z - other.z);
+        }
+
+        vec3<T> operator*(const vec3<T>& other) const {
+            return vec3<T>(x * other.x, y * other.y, z * other.z);
+        }
+
+        vec3<T> operator/(const vec3<T>& other) const {
+            return vec3<T>(x / other.x, y / other.y, z / other.z);
+        }
+
+        static vec3<T> CUSTOM(T x, T y, T z) { return {x, y, z}; };
+
+        static vec3<T> ZERO() { return {T(0), T(0), T(0)}; };
+        static vec3<T> ONE() { return {T(1), T(1), T(1)}; };
+    };
+
+    template <typename T>
+    class vec4 {
+    public:
+        T x {};
+        T y {};
+        T z {};
+        T t {};
+
+        vec4(T xValue, T yValue, T zValue, T tValue)
+                : x(xValue), y(yValue), z(zValue), t(tValue) {}
+
+        void out() {
+            std::cout << "x: " << x << "\n";
+            std::cout << "y: " << y << "\n";
+            std::cout << "z: " << z << "\n";
+            std::cout << "t: " << t << "\n";
+        }
+
+        static vec4<T> ZERO() { return {T(0), T(0), T(0), T(0)}; };
+        static vec4<T> ONE() { return {T(1), T(1), T(1), T(1)}; };
+    };
+
+    class colorRGBA {
+    public:
+        Uint8 r{};
+        Uint8 g{};
+        Uint8 b{};
+        Uint8 a{};
+
+        colorRGBA(Uint8 rValue, Uint8 gValue, Uint8 bValue, Uint8 aValue)
+                : r(rValue), g(gValue), b(bValue), a(aValue) {}
+
+        static colorRGBA CUSTOM(Uint8 r, Uint8 g, Uint8 b, Uint8 a) { return { r, g, b, a }; };
+
+        static colorRGBA BLACK() { return {(Uint8)255, (Uint8)255, (Uint8)255, (Uint8)255}; };
+        static colorRGBA WHITE() { return {(Uint8)0, (Uint8)0, (Uint8)0, (Uint8)255}; };
+        static colorRGBA RED() { return {(Uint8)255, (Uint8)0, (Uint8)0, (Uint8)255}; };
+        static colorRGBA GREEN() { return {(Uint8)0, (Uint8)255, (Uint8)0, (Uint8)255}; };
+        static colorRGBA BLUE() { return {(Uint8)0, (Uint8)0, (Uint8)255, (Uint8)255}; };
+    };
+}

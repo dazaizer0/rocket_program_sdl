@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="VcsDirectoryMappings">
+    <mapping directory="$PROJECT_DIR$/out/build/x64-Debug/_deps/sdl-src" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/out/build/x64-Debug/_deps/sdl_image-src" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/out/build/x64-Debug/_deps/sdl_image-src/external/dav1d" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/out/build/x64-Debug/_deps/sdl_image-src/external/jpeg" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/out/build/x64-Debug/_deps/sdl_image-src/external/libavif" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/out/build/x64-Debug/_deps/sdl_image-src/external/libjxl" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/out/build/x64-Debug/_deps/sdl_image-src/external/libpng" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/out/build/x64-Debug/_deps/sdl_image-src/external/libtiff" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/out/build/x64-Debug/_deps/sdl_image-src/external/libwebp" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/out/build/x64-Debug/_deps/sdl_image-src/external/zlib" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/out/cmake-build-debug/_deps/sdl-src" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/out/cmake-build-debug/_deps/sdl_image-src" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/out/cmake-build-debug/_deps/sdl_image-src/external/dav1d" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/out/cmake-build-debug/_deps/sdl_image-src/external/jpeg" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/out/cmake-build-debug/_deps/sdl_image-src/external/libavif" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/out/cmake-build-debug/_deps/sdl_image-src/external/libjxl" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/out/cmake-build-debug/_deps/sdl_image-src/external/libjxl/third_party/brotli" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/out/cmake-build-debug/_deps/sdl_image-src/external/libjxl/third_party/brotli/research/esaxx" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/out/cmake-build-debug/_deps/sdl_image-src/external/libjxl/third_party/brotli/research/libdivsufsort" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/out/cmake-build-debug/_deps/sdl_image-src/external/libjxl/third_party/googletest" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/out/cmake-build-debug/_deps/sdl_image-src/external/libjxl/third_party/highway" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/out/cmake-build-debug/_deps/sdl_image-src/external/libjxl/third_party/lcms" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/out/cmake-build-debug/_deps/sdl_image-src/external/libjxl/third_party/lodepng" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/out/cmake-build-debug/_deps/sdl_image-src/external/libjxl/third_party/sjpeg" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/out/cmake-build-debug/_deps/sdl_image-src/external/libjxl/third_party/skcms" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/out/cmake-build-debug/_deps/sdl_image-src/external/libpng" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/out/cmake-build-debug/_deps/sdl_image-src/external/libtiff" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/out/cmake-build-debug/_deps/sdl_image-src/external/libwebp" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/out/cmake-build-debug/_deps/sdl_image-src/external/zlib" vcs="Git" />
+  </component>
+</project>
