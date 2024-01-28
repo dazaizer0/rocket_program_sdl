@@ -33,6 +33,8 @@ namespace render
         // SDL_Rect destinationRect = { (int)position.x, (int)position.y, (int)size, (int)size }; <- final
         SDL_Rect destinationRect;
         SDL_Point center; // center
+
+        std::string texture_path;
 	};
 
 	texture::texture(
@@ -48,13 +50,15 @@ namespace render
         size = size_value;
         angle = angle_value;
 
+        texture_path = path;
+
         surface = IMG_Load(path);
 
         if (surface == nullptr) {
             std::cerr << "IMG_Load: Failed to load image: " << IMG_GetError() << std::endl;
         }
         else {
-            std::cout << "texture loaded successfully\n";
+            std::cout << "texture loaded successfully: " << texture_path << "\n";
         }
 
         sdl_texture = SDL_CreateTextureFromSurface(renderer, surface);
@@ -80,6 +84,6 @@ namespace render
 
 	texture::~texture() {
         SDL_DestroyTexture(sdl_texture);
-        std::cerr << "texture destroyed successfully" << std::endl;
+        std::cerr << "texture destroyed successfully: " << texture_path << std::endl;
 	}
 };
