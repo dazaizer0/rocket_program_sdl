@@ -3,7 +3,7 @@
 // SDL
 #define SDL_MAIN_HANDLED
 #include <SDL2/SDL.h>
-#include "SDL2/SDL_test_images.h"
+#include <SDL_image.h>
 
 // BASIC
 #include <iostream>

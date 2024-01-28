@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.26)
 project(yumesdl)
 
-set(CMAKE_CXX_STANDARD 23)
+set(CMAKE_CXX_STANDARD 20)
 
 set(SDL_SHARED ON)
 
@@ -25,6 +25,7 @@ add_executable(${PROJECT_NAME}
         src/config.h
         src/source/render/square.h
         src/source/math/mathy.h
+        src/source/render/texture.h
 )
 
 target_link_libraries(${PROJECT_NAME} 
