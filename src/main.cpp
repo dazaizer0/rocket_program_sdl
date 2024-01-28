@@ -35,7 +35,7 @@ int main(int argc, char* args[]) {
             mathy::vec3<float>::ZERO(),
             100,
             0.0f,
-            "C:/Users/mydat/Documents/_active_c/_cpp/yumesdl/src/rouge.png",
+            "C:/Users/mydat/Documents/_active_c/_cpp/yumesdl/assets/rouge.png",
             renderer
     );
 
@@ -52,7 +52,7 @@ int main(int argc, char* args[]) {
         mathy::vec3<float>::ZERO(),
         80,
         0.0f,
-        "C:/Users/mydat/Documents/_active_c/_cpp/yumesdl/src/sonic.png",
+        "C:/Users/mydat/Documents/_active_c/_cpp/yumesdl/assets/sonic.png",
         renderer
     );
 
@@ -72,16 +72,16 @@ int main(int argc, char* args[]) {
         const Uint8* currentKeyStates = SDL_GetKeyboardState(NULL);
 
         if (currentKeyStates[SDL_SCANCODE_UP]) {
-            sq.position.y -= SPEED;
+            sq.position = sq.position + mathy::vec3<float>::UPV2() * mathy::vec3<float>::CUSTOM(SPEED, SPEED, 0);
         }
         if (currentKeyStates[SDL_SCANCODE_DOWN]) {
-            sq.position.y += SPEED;
+            sq.position = sq.position + mathy::vec3<float>::DOWNV2() * mathy::vec3<float>::CUSTOM(SPEED, SPEED, 0);
         }
         if (currentKeyStates[SDL_SCANCODE_LEFT]) {
-            sq.position.x -= SPEED;
+            sq.position = sq.position + mathy::vec3<float>::LEFTV2() * mathy::vec3<float>::CUSTOM(SPEED, SPEED, 0);
         }
         if (currentKeyStates[SDL_SCANCODE_RIGHT]) {
-            sq.position.x += SPEED;
+            sq.position = sq.position + mathy::vec3<float>::RIGHTV2() * mathy::vec3<float>::CUSTOM(SPEED, SPEED, 0);
         }
 
         // MOVE TEXTURE

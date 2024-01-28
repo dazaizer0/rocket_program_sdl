@@ -26,6 +26,7 @@ add_executable(${PROJECT_NAME}
         src/source/render/square.h
         src/source/math/mathy.h
         src/source/render/texture.h
+        src/source/objects/player.h
 )
 
 target_link_libraries(${PROJECT_NAME} 

@@ -42,8 +42,8 @@ namespace mathy {
         static vec2<T> ZERO() { return {T(0), T(0)}; };
         static vec2<T> ONE() { return {T(1), T(1)}; };
 
-        static vec2<T> UP() { return {T(0), T(1)}; };
-        static vec2<T> DOWN() { return {T(0), T(-1)}; };
+        static vec2<T> UP() { return {T(0), T(-1)}; };
+        static vec2<T> DOWN() { return {T(0), T(1)}; };
         static vec2<T> RIGHT() { return {T(1), T(0)}; };
         static vec2<T> LEFT() { return {T(-1), T(0)}; };
     };
@@ -88,6 +88,11 @@ namespace mathy {
 
         static vec3<T> ZERO() { return {T(0), T(0), T(0)}; };
         static vec3<T> ONE() { return {T(1), T(1), T(1)}; };
+
+        static vec3<T> UPV2() { return { T(0), T(-1), T(0) }; };
+        static vec3<T> DOWNV2() { return { T(0), T(1), T(0) }; };
+        static vec3<T> RIGHTV2() { return { T(1), T(0), T(0) }; };
+        static vec3<T> LEFTV2() { return { T(-1), T(0), T(0) }; };
     };
 
     template <typename T>
@@ -107,6 +112,28 @@ namespace mathy {
             std::cout << "z: " << z << "\n";
             std::cout << "t: " << t << "\n";
         }
+
+        vec4<T> operator=(const vec4<T>& other) {
+            return vec4<T>(x = other.x, y = other.y, z = other.z, t = other.t);
+        }
+
+        vec4<T> operator+(const vec4<T>& other) const {
+            return vec4<T>(x + other.x, y + other.y, z + other.z, t + other.t);
+        }
+
+        vec4<T> operator-(const vec4<T>& other) const {
+            return vec4<T>(x - other.x, y - other.y, z - other.z, t - other.t);
+        }
+
+        vec4<T> operator*(const vec4<T>& other) const {
+            return vec4<T>(x * other.x, y * other.y, z * other.z, t * other.t);
+        }
+
+        vec4<T> operator/(const vec4<T>& other) const {
+            return vec4<T>(x / other.x, y / other.y, z / other.z, t / other.t);
+        }
+
+        static vec3<T> CUSTOM(T x, T y, T z) { return { x, y, z }; };
 
         static vec4<T> ZERO() { return {T(0), T(0), T(0), T(0)}; };
         static vec4<T> ONE() { return {T(1), T(1), T(1), T(1)}; };
