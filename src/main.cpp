@@ -1,6 +1,6 @@
 #include "config.h"
-#include "source/render/square.h"
 
+#include "source/render/square.h"
 #include "source/render/texture.h"
 
 const int SCREEN_WIDTH = 640;
@@ -34,8 +34,8 @@ int main(int argc, char* args[]) {
     render::texture tex = render::texture(
             mathy::vec3<float>::ZERO(),
             100,
-            45.0f,
-            "C:/Users/mydat/Documents/_active_c/_cpp/yumesdl/src/sonic.png",
+            0.0f,
+            "C:/Users/mydat/Documents/_active_c/_cpp/yumesdl/src/rouge.png",
             renderer
     );
 
@@ -45,6 +45,15 @@ int main(int argc, char* args[]) {
             mathy::colorRGBA::BLUE(),
             32,
             renderer
+    );
+
+    // BACKGROUND
+    render::texture bgtex = render::texture(
+        mathy::vec3<float>::ZERO(),
+        80,
+        0.0f,
+        "C:/Users/mydat/Documents/_active_c/_cpp/yumesdl/src/sonic.png",
+        renderer
     );
 
     // MAIN LOOP
@@ -79,11 +88,19 @@ int main(int argc, char* args[]) {
         int x = SCREEN_WIDTH - tex.size;
         if (tex.position.x < x) {
             tex.position.x += 0.05;
+            tex.rotation_angle += 0.1;
         }
 
         // CLEAR SCREEN
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
         SDL_RenderClear(renderer);
+
+        // BACKGROUND
+        for (float x = 0; x < SCREEN_WIDTH; x += bgtex.size) {
+            for (float y = 0; y < SCREEN_HEIGHT; y += bgtex.size) {
+                bgtex.dynamic_position_draw(mathy::vec3<float>::CUSTOM(x, y, 0.0f));
+            }
+        }
 
         // RENDER TEXTURE
         tex.draw();
