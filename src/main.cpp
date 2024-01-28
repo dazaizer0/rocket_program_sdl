@@ -103,10 +103,10 @@ int main(int argc, char* args[]) {
         }
 
         // RENDER TEXTURE
-        tex.draw();
+        tex.render_texture();
 
         // DRAW SQUARE
-        sq.draw();
+        sq.render_square();
 
         // REFRESH RENDERER
         SDL_RenderPresent(renderer);
@@ -122,6 +122,7 @@ int main(int argc, char* args[]) {
     std::cerr << "window destroyed successfully" << std::endl;
 
     SDL_DestroyTexture(tex.sdl_texture);
+    SDL_DestroyTexture(bgtex.sdl_texture);
 
     SDL_Quit();
 

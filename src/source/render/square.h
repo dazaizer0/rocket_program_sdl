@@ -10,7 +10,7 @@ namespace render {
 
         square(mathy::vec3<float> position_value, mathy::colorRGBA color, int size, SDL_Renderer* renderer);
 
-        void draw();
+        void render_square();
 
         ~square();
 
@@ -36,7 +36,7 @@ namespace render {
         a = color.a;
     }
 
-    void square::draw() {
+    void square::render_square() {
         if (renderer == nullptr) {
             std::cerr << "renderer has not been initialized\n";
             return;

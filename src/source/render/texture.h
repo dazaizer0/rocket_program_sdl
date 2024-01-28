@@ -22,7 +22,7 @@ namespace render
                 SDL_Renderer* renderer
         );
 
-        void draw();
+        void render_texture();
         void dynamic_position_draw(mathy::vec3<float> new_position);
 
 		~texture();
@@ -48,7 +48,7 @@ namespace render
         this->renderer = renderer;
 
         position = position_value;
-        size = size_value;
+        size = (int)size_value;
         rotation_angle = angle_value;
 
         texture_path = path;
@@ -74,7 +74,7 @@ namespace render
         center = { destinationRect.w / 2, destinationRect.h / 2 };
 	}
 
-    void texture::draw() {
+    void texture::render_texture() {
         // RENDER TEXTURE
         if ((int)position.x != destinationRect.x || (int)position.y != destinationRect.y) {
             destinationRect = {(int) position.x, (int) position.y, (int) size, (int) size};
