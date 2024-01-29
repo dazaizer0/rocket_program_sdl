@@ -41,7 +41,7 @@ int main(int argc, char* args[]) {
 
     // SQUARE
     render::square sq = render::square(
-            mathy::vec3<float>::CUSTOM(300.0f, 300.0f, 0.0f),
+            mathy::vec3<float>(300.0f, 300.0f, 0.0f),
             mathy::colorRGBA::BLUE(),
             32,
             renderer
@@ -98,7 +98,7 @@ int main(int argc, char* args[]) {
         // BACKGROUND
         for (int x = 0; x < SCREEN_WIDTH; x += bgtex.size) {
             for (int y = 0; y < SCREEN_HEIGHT; y += bgtex.size) {
-                bgtex.dynamic_position_draw(mathy::vec3<float>::CUSTOM(x, y, 0.0f));
+                bgtex.dynamic_position_draw(mathy::vec3<float>{(float)x, (float)y, 0.0f});
             }
         }
 

@@ -37,8 +37,6 @@ namespace mathy {
             return vec2<T>(x / other.x, y / other.y);
         }
 
-        static vec2<T> CUSTOM(T x, T y) { return { x, y}; };
-
         static vec2<T> VARIABLE(float variable) { return { variable, variable}; };
 
         static vec2<T> ZERO() { return { T(0), T(0)}; };
@@ -86,8 +84,6 @@ namespace mathy {
             return vec3<T>(x / other.x, y / other.y, z / other.z);
         }
 
-        static vec3<T> CUSTOM(T x, T y, T z) { return { x, y, z}; };
-
         static vec3<T> VARIABLE(float variable) { return { variable, variable, variable }; };
 
         static vec3<T> ZERO() { return { T(0), T(0), T(0)}; };
@@ -99,52 +95,6 @@ namespace mathy {
         static vec3<T> DOWNV2() { return { T(0), T(1), T(0) }; };
         static vec3<T> RIGHTV2() { return { T(1), T(0), T(0) }; };
         static vec3<T> LEFTV2() { return { T(-1), T(0), T(0) }; };
-    };
-
-    template <typename T>
-    class vec4 {
-    public:
-        T x {};
-        T y {};
-        T z {};
-        T t {};
-
-        vec4(T xValue, T yValue, T zValue, T tValue)
-                : x(xValue), y(yValue), z(zValue), t(tValue) {}
-
-        void out() {
-            std::cout << "x: " << x << "\n";
-            std::cout << "y: " << y << "\n";
-            std::cout << "z: " << z << "\n";
-            std::cout << "t: " << t << "\n";
-        }
-
-        vec4<T> operator=(const vec4<T>& other) {
-            return vec4<T>(x = other.x, y = other.y, z = other.z, t = other.t);
-        }
-
-        vec4<T> operator+(const vec4<T>& other) const {
-            return vec4<T>(x + other.x, y + other.y, z + other.z, t + other.t);
-        }
-
-        vec4<T> operator-(const vec4<T>& other) const {
-            return vec4<T>(x - other.x, y - other.y, z - other.z, t - other.t);
-        }
-
-        vec4<T> operator*(const vec4<T>& other) const {
-            return vec4<T>(x * other.x, y * other.y, z * other.z, t * other.t);
-        }
-
-        vec4<T> operator/(const vec4<T>& other) const {
-            return vec4<T>(x / other.x, y / other.y, z / other.z, t / other.t);
-        }
-
-        static vec4<T> CUSTOM(T x, T y, T z, T t) { return { x, y, z, t }; };
-
-        static vec4<T> VARIABLE(float variable) { return { variable, variable, variable, variable }; };
-
-        static vec4<T> ZERO() { return { T(0), T(0), T(0), T(0)}; };
-        static vec4<T> ONE() { return { T(1), T(1), T(1), T(1)}; };
     };
 
     class colorRGBA {
