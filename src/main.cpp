@@ -72,21 +72,21 @@ int main(int argc, char* args[]) {
         const Uint8* currentKeyStates = SDL_GetKeyboardState(NULL);
 
         if (currentKeyStates[SDL_SCANCODE_UP]) {
-            sq.position = sq.position + mathy::vec3<float>::UPV2() * mathy::vec3<float>::CUSTOM(SPEED, SPEED, 0);
+            sq.position = sq.position + mathy::vec3<float>::UPV2() * mathy::vec3<float>::VARIABLE2(SPEED);
         }
         if (currentKeyStates[SDL_SCANCODE_DOWN]) {
-            sq.position = sq.position + mathy::vec3<float>::DOWNV2() * mathy::vec3<float>::CUSTOM(SPEED, SPEED, 0);
+            sq.position = sq.position + mathy::vec3<float>::DOWNV2() * mathy::vec3<float>::VARIABLE2(SPEED);
         }
         if (currentKeyStates[SDL_SCANCODE_LEFT]) {
-            sq.position = sq.position + mathy::vec3<float>::LEFTV2() * mathy::vec3<float>::CUSTOM(SPEED, SPEED, 0);
+            sq.position = sq.position + mathy::vec3<float>::LEFTV2() * mathy::vec3<float>::VARIABLE2(SPEED);
         }
         if (currentKeyStates[SDL_SCANCODE_RIGHT]) {
-            sq.position = sq.position + mathy::vec3<float>::RIGHTV2() * mathy::vec3<float>::CUSTOM(SPEED, SPEED, 0);
+            sq.position = sq.position + mathy::vec3<float>::RIGHTV2() * mathy::vec3<float>::VARIABLE2(SPEED);
         }
 
         // MOVE TEXTURE
-        int x = SCREEN_WIDTH - tex.size;
-        if (tex.position.x < x) {
+        int move_border = SCREEN_WIDTH - tex.size;
+        if (tex.position.x < move_border) {
             tex.position.x += 0.05;
             tex.rotation_angle += 0.1;
         }
@@ -96,8 +96,8 @@ int main(int argc, char* args[]) {
         SDL_RenderClear(renderer);
 
         // BACKGROUND
-        for (float x = 0; x < SCREEN_WIDTH; x += bgtex.size) {
-            for (float y = 0; y < SCREEN_HEIGHT; y += bgtex.size) {
+        for (int x = 0; x < SCREEN_WIDTH; x += bgtex.size) {
+            for (int y = 0; y < SCREEN_HEIGHT; y += bgtex.size) {
                 bgtex.dynamic_position_draw(mathy::vec3<float>::CUSTOM(x, y, 0.0f));
             }
         }

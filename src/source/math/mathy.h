@@ -37,15 +37,17 @@ namespace mathy {
             return vec2<T>(x / other.x, y / other.y);
         }
 
-        static vec2<T> CUSTOM(T x, T y) { return {x, y}; };
+        static vec2<T> CUSTOM(T x, T y) { return { x, y}; };
 
-        static vec2<T> ZERO() { return {T(0), T(0)}; };
-        static vec2<T> ONE() { return {T(1), T(1)}; };
+        static vec2<T> VARIABLE(float variable) { return { variable, variable}; };
 
-        static vec2<T> UP() { return {T(0), T(-1)}; };
-        static vec2<T> DOWN() { return {T(0), T(1)}; };
-        static vec2<T> RIGHT() { return {T(1), T(0)}; };
-        static vec2<T> LEFT() { return {T(-1), T(0)}; };
+        static vec2<T> ZERO() { return { T(0), T(0)}; };
+        static vec2<T> ONE() { return { T(1), T(1)}; };
+
+        static vec2<T> UP() { return { T(0), T(-1)}; };
+        static vec2<T> DOWN() { return { T(0), T(1)}; };
+        static vec2<T> RIGHT() { return { T(1), T(0)}; };
+        static vec2<T> LEFT() { return { T(-1), T(0)}; };
     };
 
     template <typename T>
@@ -84,10 +86,14 @@ namespace mathy {
             return vec3<T>(x / other.x, y / other.y, z / other.z);
         }
 
-        static vec3<T> CUSTOM(T x, T y, T z) { return {x, y, z}; };
+        static vec3<T> CUSTOM(T x, T y, T z) { return { x, y, z}; };
 
-        static vec3<T> ZERO() { return {T(0), T(0), T(0)}; };
-        static vec3<T> ONE() { return {T(1), T(1), T(1)}; };
+        static vec3<T> VARIABLE(float variable) { return { variable, variable, variable }; };
+
+        static vec3<T> ZERO() { return { T(0), T(0), T(0)}; };
+        static vec3<T> ONE() { return { T(1), T(1), T(1)}; };
+
+        static vec3<T> VARIABLE2(float variable) { return { variable, variable, 0 }; };
 
         static vec3<T> UPV2() { return { T(0), T(-1), T(0) }; };
         static vec3<T> DOWNV2() { return { T(0), T(1), T(0) }; };
@@ -133,10 +139,12 @@ namespace mathy {
             return vec4<T>(x / other.x, y / other.y, z / other.z, t / other.t);
         }
 
-        static vec3<T> CUSTOM(T x, T y, T z) { return { x, y, z }; };
+        static vec4<T> CUSTOM(T x, T y, T z, T t) { return { x, y, z, t }; };
 
-        static vec4<T> ZERO() { return {T(0), T(0), T(0), T(0)}; };
-        static vec4<T> ONE() { return {T(1), T(1), T(1), T(1)}; };
+        static vec4<T> VARIABLE(float variable) { return { variable, variable, variable, variable }; };
+
+        static vec4<T> ZERO() { return { T(0), T(0), T(0), T(0)}; };
+        static vec4<T> ONE() { return { T(1), T(1), T(1), T(1)}; };
     };
 
     class colorRGBA {
