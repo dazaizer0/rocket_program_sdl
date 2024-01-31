@@ -12,7 +12,7 @@ namespace render {
 
         void render_square();
 
-        ~square();
+        ~square() = default;
 
     private:
         Uint8 r;
@@ -59,8 +59,4 @@ namespace render {
 
         SDL_RenderFillRect(renderer, &squareRect);
     }
-
-    square::~square() {
-    }
-
-}; // namespace render
+}

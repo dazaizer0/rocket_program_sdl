@@ -37,8 +37,6 @@ namespace mathy {
             return vec2<T>(x / other.x, y / other.y);
         }
 
-        static vec2<T> VARIABLE(float variable) { return { variable, variable}; };
-
         static vec2<T> ZERO() { return { T(0), T(0)}; };
         static vec2<T> ONE() { return { T(1), T(1)}; };
 
@@ -84,12 +82,8 @@ namespace mathy {
             return vec3<T>(x / other.x, y / other.y, z / other.z);
         }
 
-        static vec3<T> VARIABLE(float variable) { return { variable, variable, variable }; };
-
         static vec3<T> ZERO() { return { T(0), T(0), T(0)}; };
         static vec3<T> ONE() { return { T(1), T(1), T(1)}; };
-
-        static vec3<T> VARIABLE2(float variable) { return { variable, variable, 0 }; };
 
         static vec3<T> UPV2() { return { T(0), T(-1), T(0) }; };
         static vec3<T> DOWNV2() { return { T(0), T(1), T(0) }; };
@@ -106,8 +100,6 @@ namespace mathy {
 
         colorRGBA(Uint8 rValue, Uint8 gValue, Uint8 bValue, Uint8 aValue)
                 : r(rValue), g(gValue), b(bValue), a(aValue) {}
-
-        static colorRGBA CUSTOM(Uint8 r, Uint8 g, Uint8 b, Uint8 a) { return { r, g, b, a }; };
 
         static colorRGBA BLACK() { return {(Uint8)255, (Uint8)255, (Uint8)255, (Uint8)255}; };
         static colorRGBA WHITE() { return {(Uint8)0, (Uint8)0, (Uint8)0, (Uint8)255}; };

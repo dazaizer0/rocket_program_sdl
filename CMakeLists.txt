@@ -5,6 +5,8 @@ set(CMAKE_CXX_STANDARD 20)
 
 set(SDL_SHARED ON)
 
+add_subdirectory(glm)
+
 include(FetchContent)
 FetchContent_Declare(
         SDL
@@ -26,7 +28,6 @@ add_executable(${PROJECT_NAME}
         src/source/render/square.h
         src/source/math/mathy.h
         src/source/render/texture.h
-        src/source/objects/player.h
 )
 
 target_link_libraries(${PROJECT_NAME} 
@@ -38,4 +39,9 @@ target_link_libraries(${PROJECT_NAME}
 target_include_directories(${PROJECT_NAME} 
         PRIVATE 
         ${sdl_BINARY_DIR}/include
+)
+
+target_link_libraries(${PROJECT_NAME}
+        PRIVATE
+        glm
 )

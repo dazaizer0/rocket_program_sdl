@@ -32,10 +32,10 @@ int main(int argc, char* args[]) {
 
     // TEXTURE
     render::texture tex = render::texture(
+            "C:/Users/mydat/Documents/_active_c/_cpp/yumesdl/assets/rouge.png",
             mathy::vec3<float>::ZERO(),
             100,
             0.0f,
-            "C:/Users/mydat/Documents/_active_c/_cpp/yumesdl/assets/rouge.png",
             renderer
     );
 
@@ -49,10 +49,10 @@ int main(int argc, char* args[]) {
 
     // BACKGROUND
     render::texture bgtex = render::texture(
+        "C:/Users/mydat/Documents/_active_c/_cpp/yumesdl/assets/sonic.png",
         mathy::vec3<float>::ZERO(),
         80,
         0.0f,
-        "C:/Users/mydat/Documents/_active_c/_cpp/yumesdl/assets/sonic.png",
         renderer
     );
 
@@ -64,28 +64,29 @@ int main(int argc, char* args[]) {
         while (SDL_PollEvent(&e) != 0) {
             if (e.type == SDL_QUIT) {
                 quit = true;
-            } else if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_ESCAPE) {
+            }
+            else if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_ESCAPE) {
                 quit = true;
             }
         }
 
-        const Uint8* currentKeyStates = SDL_GetKeyboardState(NULL);
+        const Uint8* currentKeyStates = SDL_GetKeyboardState(nullptr);
 
         if (currentKeyStates[SDL_SCANCODE_UP]) {
-            sq.position = sq.position + mathy::vec3<float>::UPV2() * mathy::vec3<float>::VARIABLE2(SPEED);
+            sq.position = sq.position + mathy::vec3<float>::UPV2() * mathy::vec3<float> {SPEED, SPEED, 0};
         }
         if (currentKeyStates[SDL_SCANCODE_DOWN]) {
-            sq.position = sq.position + mathy::vec3<float>::DOWNV2() * mathy::vec3<float>::VARIABLE2(SPEED);
+            sq.position = sq.position + mathy::vec3<float>::DOWNV2() * mathy::vec3<float> {SPEED, SPEED, 0};
         }
         if (currentKeyStates[SDL_SCANCODE_LEFT]) {
-            sq.position = sq.position + mathy::vec3<float>::LEFTV2() * mathy::vec3<float>::VARIABLE2(SPEED);
+            sq.position = sq.position + mathy::vec3<float>::LEFTV2() * mathy::vec3<float> {SPEED, SPEED, 0};
         }
         if (currentKeyStates[SDL_SCANCODE_RIGHT]) {
-            sq.position = sq.position + mathy::vec3<float>::RIGHTV2() * mathy::vec3<float>::VARIABLE2(SPEED);
+            sq.position = sq.position + mathy::vec3<float>::RIGHTV2() * mathy::vec3<float> {SPEED, SPEED, 0};
         }
 
         // MOVE TEXTURE
-        int move_border = SCREEN_WIDTH - tex.size;
+        float move_border = (float)SCREEN_WIDTH - (float)tex.size;
         if (tex.position.x < move_border) {
             tex.position.x += 0.05;
             tex.rotation_angle += 0.1;

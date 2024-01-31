@@ -11,14 +11,14 @@ namespace render
 	public:
         mathy::vec3<float> position = mathy::vec3<float>::ZERO();
         SDL_Texture* sdl_texture;
-        double rotation_angle {};
-        int size {};
+        double rotation_angle{};
+        int size{};
 
 		texture(
+                const char *path,
                 mathy::vec3<float> position_value,
                 float size_value,
                 float angle_value,
-                const char *path,
                 SDL_Renderer* renderer
         );
 
@@ -32,17 +32,17 @@ namespace render
         SDL_Surface* surface;
 
         // SDL_Rect destinationRect = { (int)position.x, (int)position.y, (int)size, (int)size }; <- final
-        SDL_Rect destinationRect;
-        SDL_Point center; // center
+        SDL_Rect destinationRect{};
+        SDL_Point center{}; // center
 
         std::string texture_path;
 	};
 
 	texture::texture(
+            const char *path,
             mathy::vec3<float> position_value,
             float size_value,
             float angle_value,
-            const char *path,
             SDL_Renderer *renderer) {
 
         this->renderer = renderer;
@@ -80,17 +80,17 @@ namespace render
             destinationRect = {(int) position.x, (int) position.y, (int) size, (int) size};
         }
 
-        SDL_RenderCopyEx(renderer, sdl_texture, NULL, &destinationRect, rotation_angle, &center, SDL_FLIP_NONE);
+        SDL_RenderCopyEx(renderer, sdl_texture, nullptr, &destinationRect, rotation_angle, &center, SDL_FLIP_NONE);
     }
 
     void texture::dynamic_position_draw(mathy::vec3<float> new_position) {
         // RENDER TEXTURE
         SDL_Rect newDestinationRect = { (int)new_position.x, (int)new_position.y, (int)size, (int)size };
-        SDL_RenderCopyEx(renderer, sdl_texture, NULL, &newDestinationRect, rotation_angle, &center, SDL_FLIP_NONE);
+        SDL_RenderCopyEx(renderer, sdl_texture, nullptr, &newDestinationRect, rotation_angle, &center, SDL_FLIP_NONE);
     }
 
 	texture::~texture() {
         SDL_DestroyTexture(sdl_texture);
         std::cerr << "texture destroyed successfully: " << texture_path << std::endl;
 	}
-};
+}
