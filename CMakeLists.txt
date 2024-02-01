@@ -25,8 +25,8 @@ FetchContent_MakeAvailable(SDL_image)
 add_executable(${PROJECT_NAME}
         src/main.cpp
         src/config.h
-        src/source/render/square.h
         src/source/math/mathy.h
+        src/source/render/square.h
         src/source/render/texture.h
 )
 

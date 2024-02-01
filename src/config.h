@@ -5,6 +5,8 @@
 #include <SDL2/SDL.h>
 #include <SDL_image.h>
 
+#include <glm/glm.hpp>
+
 // BASIC
 #include <iostream>
 
