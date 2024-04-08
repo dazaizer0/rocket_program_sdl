@@ -32,7 +32,7 @@ int main(int argc, char* args[]) {
 
     // TEXTURE
     render::texture tex = render::texture(
-            "C:/Users/mydat/Documents/_active_c/_cpp/yumesdl/assets/rouge.png",
+            "assets/rouge.png",
             mathy::vec3<float>::ZERO(),
             100,
             0.0f,
@@ -49,7 +49,7 @@ int main(int argc, char* args[]) {
 
     // BACKGROUND
     render::texture bgtex = render::texture(
-        "C:/Users/mydat/Documents/_active_c/_cpp/yumesdl/assets/sonic.png",
+        "assets/sonic.png",
         mathy::vec3<float>::ZERO(),
         80,
         0.0f,
