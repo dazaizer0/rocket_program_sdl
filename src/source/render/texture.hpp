@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../../config.h"
-#include "square.h"
+#include "square.hpp"
 
 namespace render {
 	class texture {

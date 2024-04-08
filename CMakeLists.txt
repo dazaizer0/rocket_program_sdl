@@ -42,9 +42,9 @@ endif()
 add_executable(${PROJECT_NAME}
         src/main.cpp
         src/config.h
-        src/source/math/mathy.h
-        src/source/render/square.h
-        src/source/render/texture.h
+        src/source/math/mathy.hpp
+        src/source/render/square.hpp
+        src/source/render/texture.hpp
 )
 
 if(WIN32)
@@ -63,6 +63,8 @@ elseif (UNIX AND NOT APPLE)
     target_link_libraries(${PROJECT_NAME}
             PRIVATE
             SDL2::SDL2
+            SDL2_image
+            SDL2_mixer
     )
 
     target_include_directories(${PROJECT_NAME}

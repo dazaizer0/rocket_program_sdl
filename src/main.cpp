@@ -1,12 +1,12 @@
 #include "config.h"
 
-#include "source/render/square.h"
-#include "source/render/texture.h"
+#include "source/render/square.hpp"
+#include "source/render/texture.hpp"
 
 const int SCREEN_WIDTH = 640;
 const int SCREEN_HEIGHT = 480;
 
-const float SPEED = 0.16f;
+const float SPEED = 620.0f;
 
 int main(int argc, char* args[]) {
     // INITIALIZATION
@@ -35,15 +35,19 @@ int main(int argc, char* args[]) {
     render::texture bgtex = render::texture("assets/sonic.png", mathy::vec3<float>::ZERO(), 80, 0.0f, renderer);
 
     // MAIN LOOP
+    Uint32 prevTime = SDL_GetTicks();
+
     bool quit = false;
     while (!quit) {
+        Uint32 currentTime = SDL_GetTicks();
+        float deltaTime = (currentTime - prevTime) / 1000.0f;
+
         // EVENTS
         SDL_Event e;
         while (SDL_PollEvent(&e) != 0) {
             if (e.type == SDL_QUIT) {
                 quit = true;
-            }
-            else if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_ESCAPE) {
+            } else if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_ESCAPE) {
                 quit = true;
             }
         }
@@ -51,23 +55,22 @@ int main(int argc, char* args[]) {
         const Uint8* currentKeyStates = SDL_GetKeyboardState(nullptr);
 
         if (currentKeyStates[SDL_SCANCODE_UP]) {
-            sq.position = sq.position + mathy::vec3<float>::UPV2() * mathy::vec3<float> {SPEED, SPEED, 0};
+            sq.position = sq.position + mathy::vec3<float>::UPV2() * mathy::vec3<float> {SPEED, SPEED, 0} * mathy::vec3<float> {deltaTime, deltaTime, 0};
+        } else if (currentKeyStates[SDL_SCANCODE_DOWN]) {
+            sq.position = sq.position + mathy::vec3<float>::DOWNV2() * mathy::vec3<float> {SPEED, SPEED, 0} * mathy::vec3<float> {deltaTime, deltaTime, 0};
         }
-        if (currentKeyStates[SDL_SCANCODE_DOWN]) {
-            sq.position = sq.position + mathy::vec3<float>::DOWNV2() * mathy::vec3<float> {SPEED, SPEED, 0};
-        }
+
         if (currentKeyStates[SDL_SCANCODE_LEFT]) {
-            sq.position = sq.position + mathy::vec3<float>::LEFTV2() * mathy::vec3<float> {SPEED, SPEED, 0};
-        }
-        if (currentKeyStates[SDL_SCANCODE_RIGHT]) {
-            sq.position = sq.position + mathy::vec3<float>::RIGHTV2() * mathy::vec3<float> {SPEED, SPEED, 0};
+            sq.position = sq.position + mathy::vec3<float>::LEFTV2() * mathy::vec3<float> {SPEED, SPEED, 0} * mathy::vec3<float> {deltaTime, deltaTime, 0};
+        } else if (currentKeyStates[SDL_SCANCODE_RIGHT]) {
+            sq.position = sq.position + mathy::vec3<float>::RIGHTV2() * mathy::vec3<float> {SPEED, SPEED, 0} * mathy::vec3<float> {deltaTime, deltaTime, 0};
         }
 
         // MOVE TEXTURE
         float move_border = (float)SCREEN_WIDTH - (float)tex.size;
         if (tex.position.x < move_border) {
-            tex.position.x += 0.05;
-            tex.rotation_angle += 0.1;
+            tex.position.x += 50.0f * deltaTime;
+            tex.rotation_angle += 100.0f * deltaTime;
         }
 
         // CLEAR SCREEN
@@ -75,11 +78,11 @@ int main(int argc, char* args[]) {
         SDL_RenderClear(renderer);
 
         // BACKGROUND
-        for (int x = 0; x < SCREEN_WIDTH; x += bgtex.size) {
-            for (int y = 0; y < SCREEN_HEIGHT; y += bgtex.size) {
-                bgtex.dynamic_position_draw(mathy::vec3<float>{(float)x, (float)y, 0.0f});
-            }
-        }
+        //for (int x = 0; x < SCREEN_WIDTH; x += bgtex.size) {
+        //    for (int y = 0; y < SCREEN_HEIGHT; y += bgtex.size) {
+        //        bgtex.dynamic_position_draw(mathy::vec3<float>{(float)x, (float)y, 0.0f});
+        //    }
+        //}
 
         // RENDER TEXTURE
         tex.render_texture();
@@ -89,6 +92,7 @@ int main(int argc, char* args[]) {
 
         // REFRESH RENDERER
         SDL_RenderPresent(renderer);
+        prevTime = currentTime;
     }
 
     // DE-INITIALIZATION
