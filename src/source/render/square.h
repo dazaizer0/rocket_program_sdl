@@ -3,7 +3,6 @@
 #include "../../config.h"
 
 namespace render {
-
     class square {
     public:
         mathy::vec3<float> position = mathy::vec3<float>::ZERO();
@@ -42,20 +41,9 @@ namespace render {
             return;
         }
 
-        SDL_SetRenderDrawColor(
-                renderer,
-                r,
-                g,
-                b,
-                a
-        );
+        SDL_SetRenderDrawColor(renderer, r, g, b, a);
 
-        SDL_Rect squareRect = {
-                (int)position.x,
-                (int)position.y,
-                size,
-                size
-        };
+        SDL_Rect squareRect = { (int)position.x, (int)position.y, size, size };
 
         SDL_RenderFillRect(renderer, &squareRect);
     }

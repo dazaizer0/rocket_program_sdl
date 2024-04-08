@@ -12,12 +12,7 @@ int main(int argc, char* args[]) {
     // INITIALIZATION
     SDL_Init(SDL_INIT_VIDEO);
 
-    SDL_Window* window = SDL_CreateWindow(
-            "yumesdl",
-            SDL_WINDOWPOS_CENTERED,
-            SDL_WINDOWPOS_CENTERED,
-            SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN
-    );
+    SDL_Window* window = SDL_CreateWindow("yumesdl", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
 
     if (window == nullptr) {
         std::cerr << "failed to initialize window:\n" << SDL_GetError();
@@ -31,30 +26,13 @@ int main(int argc, char* args[]) {
     SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
 
     // TEXTURE
-    render::texture tex = render::texture(
-            "assets/rouge.png",
-            mathy::vec3<float>::ZERO(),
-            100,
-            0.0f,
-            renderer
-    );
+    render::texture tex = render::texture("assets/rouge.png", mathy::vec3<float>::ZERO(), 100, 0.0f, renderer);
 
     // SQUARE
-    render::square sq = render::square(
-            mathy::vec3<float>(300.0f, 300.0f, 0.0f),
-            mathy::colorRGBA::BLUE(),
-            32,
-            renderer
-    );
+    render::square sq = render::square(mathy::vec3<float>(300.0f, 300.0f, 0.0f), mathy::colorRGBA::BLUE(), 32, renderer);
 
     // BACKGROUND
-    render::texture bgtex = render::texture(
-        "assets/sonic.png",
-        mathy::vec3<float>::ZERO(),
-        80,
-        0.0f,
-        renderer
-    );
+    render::texture bgtex = render::texture("assets/sonic.png", mathy::vec3<float>::ZERO(), 80, 0.0f, renderer);
 
     // MAIN LOOP
     bool quit = false;
@@ -114,8 +92,6 @@ int main(int argc, char* args[]) {
     }
 
     // DE-INITIALIZATION
-    std::cerr << std::endl;
-
     SDL_DestroyRenderer(renderer);
     std::cerr << "renderer destroyed successfully" << std::endl;
 

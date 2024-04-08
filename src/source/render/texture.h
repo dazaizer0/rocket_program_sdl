@@ -1,26 +1,17 @@
 #pragma once
 
 #include "../../config.h"
-
 #include "square.h"
 
-namespace render
-{
-	class texture
-	{
+namespace render {
+	class texture {
 	public:
         mathy::vec3<float> position = mathy::vec3<float>::ZERO();
         SDL_Texture* sdl_texture;
         double rotation_angle{};
         int size{};
 
-		texture(
-                const char *path,
-                mathy::vec3<float> position_value,
-                float size_value,
-                float angle_value,
-                SDL_Renderer* renderer
-        );
+		texture(const char *path, mathy::vec3<float> position_value, float size_value, float angle_value, SDL_Renderer* renderer);
 
         void render_texture();
         void dynamic_position_draw(mathy::vec3<float> new_position);
@@ -38,15 +29,8 @@ namespace render
         std::string texture_path;
 	};
 
-	texture::texture(
-            const char *path,
-            mathy::vec3<float> position_value,
-            float size_value,
-            float angle_value,
-            SDL_Renderer *renderer) {
-
+	texture::texture(const char *path, mathy::vec3<float> position_value, float size_value, float angle_value, SDL_Renderer *renderer) {
         this->renderer = renderer;
-
         position = position_value;
         size = (int)size_value;
         rotation_angle = angle_value;
