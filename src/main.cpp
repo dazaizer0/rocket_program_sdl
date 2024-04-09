@@ -2,9 +2,10 @@
 
 #include "source/render/square.hpp"
 #include "source/render/texture.hpp"
+#include "source/render/objects.hpp"
 
-const int SCREEN_WIDTH = 640;
-const int SCREEN_HEIGHT = 480;
+const int SCREEN_WIDTH = 650;
+const int SCREEN_HEIGHT = 500;
 
 const float SPEED = 620.0f;
 
@@ -25,11 +26,15 @@ int main(int argc, char* args[]) {
     // RENDERER
     SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
 
+    int grid_size = 50;
+    int mouse_pos_x, mouse_pos_y = 0;
+
     // TEXTURE
     render::texture tex = render::texture("assets/rouge.png", mathy::vec3<float>::ZERO(), 100, 0.0f, renderer);
 
     // SQUARE
-    render::square sq = render::square(mathy::vec3<float>(300.0f, 300.0f, 0.0f), mathy::colorRGBA::BLUE(), 32, renderer);
+    render::square sq = render::square(mathy::vec3<float>(300.0f, 300.0f, 0.0f), mathy::colorRGBA::BLUE(), grid_size, renderer);
+    render::square mouse = render::square(mathy::vec3<float>::ZERO(), mathy::colorRGBA::RED(), grid_size, renderer);
 
     // BACKGROUND
     render::texture bgtex = render::texture("assets/sonic.png", mathy::vec3<float>::ZERO(), 80, 0.0f, renderer);
@@ -52,6 +57,11 @@ int main(int argc, char* args[]) {
             }
         }
 
+        SDL_GetMouseState(&mouse_pos_x, &mouse_pos_y);
+
+        mouse.position = mathy::vec3<float>{(float)((int)(mouse_pos_x / grid_size) * grid_size), (float)((int)(mouse_pos_y / grid_size) * grid_size), 0};
+        
+         // MOVEMENT
         const Uint8* currentKeyStates = SDL_GetKeyboardState(nullptr);
 
         if (currentKeyStates[SDL_SCANCODE_UP]) {
@@ -89,6 +99,7 @@ int main(int argc, char* args[]) {
 
         // DRAW SQUARE
         sq.render_square();
+        mouse.render_square();
 
         // REFRESH RENDERER
         SDL_RenderPresent(renderer);
