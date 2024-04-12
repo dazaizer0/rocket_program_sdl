@@ -9,6 +9,10 @@ const int SCREEN_HEIGHT = 500;
 
 const float SPEED = 620.0f;
 
+double distance(int x1, int y1, int x2, int y2) {
+    return std::sqrt(std::pow(x2 - x1, 2) + std::pow(y2 - y1, 2));
+}
+
 int main(int argc, char* args[]) {
     // INITIALIZATION
     SDL_Init(SDL_INIT_VIDEO);
@@ -24,7 +28,7 @@ int main(int argc, char* args[]) {
     }
 
     // RENDERER
-    SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+    SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_PRESENTVSYNC | SDL_RENDERER_ACCELERATED );
 
     int grid_size = 50;
     int mouse_pos_x, mouse_pos_y = 0;
@@ -44,6 +48,8 @@ int main(int argc, char* args[]) {
 
     bool quit = false;
     while (!quit) {
+        Uint64 start = SDL_GetPerformanceCounter();
+
         Uint32 currentTime = SDL_GetTicks();
         float deltaTime = (currentTime - prevTime) / 1000.0f;
 
@@ -83,6 +89,17 @@ int main(int argc, char* args[]) {
             tex.rotation_angle += 100.0f * deltaTime;
         }
 
+        int mouseX, mouseY;
+        Uint32 mouseState = SDL_GetMouseState(&mouseX, &mouseY);
+
+        if (distance(mouseX, mouseY, tex.position.x, tex.position.y) < tex.size) {
+            tex.size = 120;
+        }
+        else {
+            tex.size = 80;
+        }
+        
+        
         // CLEAR SCREEN
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
         SDL_RenderClear(renderer);
@@ -95,7 +112,7 @@ int main(int argc, char* args[]) {
         //}
 
         // RENDER TEXTURE
-        tex.render_texture();
+        tex.render_texture();   
 
         // DRAW SQUARE
         sq.render_square();
@@ -104,6 +121,10 @@ int main(int argc, char* args[]) {
         // REFRESH RENDERER
         SDL_RenderPresent(renderer);
         prevTime = currentTime;
+
+        Uint64 end = SDL_GetPerformanceCounter();
+	    float elapsedMS = (end - start) / (float)SDL_GetPerformanceFrequency() * 1000.0f;
+        SDL_Delay(floor(16.666f - elapsedMS)); // cap fps to 60
     }
 
     // DE-INITIALIZATION
