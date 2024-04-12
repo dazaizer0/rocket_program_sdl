@@ -5,9 +5,10 @@
 namespace render {
     class square {
     public:
-        mathy::vec3<float> position = mathy::vec3<float>::ZERO();
+        mathy::vec2<float> position = mathy::vec2<float>::ZERO();
+        mathy::vec2<float> size = mathy::vec2<float>::ZERO();
 
-        square(mathy::vec3<float> position_value, mathy::colorRGBA color, int size, SDL_Renderer* renderer);
+        square(mathy::vec2<float> position_value, mathy::colorRGBA color, mathy::vec2<float> size, SDL_Renderer* renderer);
 
         void render_square();
 
@@ -19,12 +20,10 @@ namespace render {
         Uint8 b;
         Uint8 a;
 
-        int size;
-
         SDL_Renderer* renderer;
     };
 
-    square::square(mathy::vec3<float> position_value, mathy::colorRGBA color, int size_value, SDL_Renderer* renderer) {
+    square::square(mathy::vec2<float> position_value, mathy::colorRGBA color, mathy::vec2<float> size_value, SDL_Renderer* renderer) {
         this->renderer = renderer;
         position = position_value;
         size = size_value;
@@ -43,7 +42,7 @@ namespace render {
 
         SDL_SetRenderDrawColor(renderer, r, g, b, a);
 
-        SDL_Rect squareRect = { (int)position.x, (int)position.y, size, size };
+        SDL_Rect squareRect = { (int)position.x, (int)position.y, (int)size.x, (int)size.y };
 
         SDL_RenderFillRect(renderer, &squareRect);
     }

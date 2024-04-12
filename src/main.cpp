@@ -9,10 +9,6 @@ const int SCREEN_HEIGHT = 500;
 
 const float SPEED = 620.0f;
 
-double distance(int x1, int y1, int x2, int y2) {
-    return std::sqrt(std::pow(x2 - x1, 2) + std::pow(y2 - y1, 2));
-}
-
 int main(int argc, char* args[]) {
     // INITIALIZATION
     SDL_Init(SDL_INIT_VIDEO);
@@ -31,17 +27,17 @@ int main(int argc, char* args[]) {
     SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_PRESENTVSYNC | SDL_RENDERER_ACCELERATED );
 
     int grid_size = 50;
-    int mouse_pos_x, mouse_pos_y = 0;
+    mathy::vec2<int> mouse_pos = mathy::vec2<int>::ZERO();
 
     // TEXTURE
-    render::texture tex = render::texture("assets/rouge.png", mathy::vec3<float>::ZERO(), 100, 0.0f, renderer);
+    render::texture tex = render::texture("assets/rouge.png", mathy::vec2<float>::ZERO(), mathy::vec2<float>{100.0f, 100.0f}, 0.0f, renderer);
 
     // SQUARE
-    render::square sq = render::square(mathy::vec3<float>(300.0f, 300.0f, 0.0f), mathy::colorRGBA::BLUE(), grid_size, renderer);
-    render::square mouse = render::square(mathy::vec3<float>::ZERO(), mathy::colorRGBA::RED(), grid_size, renderer);
+    render::square sq = render::square(mathy::vec2<float>{300.0f, 300.0f}, mathy::colorRGBA::BLUE(), mathy::vec2<float>{(float)grid_size, (float)grid_size}, renderer);
+    render::square mouse = render::square(mathy::vec2<float>::ZERO(), mathy::colorRGBA::RED(), mathy::vec2<float>{(float)grid_size, (float)grid_size}, renderer);
 
     // BACKGROUND
-    render::texture bgtex = render::texture("assets/sonic.png", mathy::vec3<float>::ZERO(), 80, 0.0f, renderer);
+    render::texture bgtex = render::texture("assets/sonic.png", mathy::vec2<float>::ZERO(), mathy::vec2<float>{(float)grid_size, (float)grid_size}, 0.0f, renderer);
 
     // MAIN LOOP
     Uint32 prevTime = SDL_GetTicks();
@@ -63,40 +59,37 @@ int main(int argc, char* args[]) {
             }
         }
 
-        SDL_GetMouseState(&mouse_pos_x, &mouse_pos_y);
+        SDL_GetMouseState(&mouse_pos.x, &mouse_pos.y);
 
-        mouse.position = mathy::vec3<float>{(float)((int)(mouse_pos_x / grid_size) * grid_size), (float)((int)(mouse_pos_y / grid_size) * grid_size), 0};
+        // mouse.position = mathy::vec2<float>{(float)((int)(mouse_pos.x / grid_size) * grid_size), (float)((int)(mouse_pos.y / grid_size) * grid_size)};
         
          // MOVEMENT
         const Uint8* currentKeyStates = SDL_GetKeyboardState(nullptr);
 
         if (currentKeyStates[SDL_SCANCODE_UP]) {
-            sq.position = sq.position + mathy::vec3<float>::UPV2() * mathy::vec3<float> {SPEED, SPEED, 0} * mathy::vec3<float> {deltaTime, deltaTime, 0};
+            sq.position = sq.position + mathy::vec2<float>::UP() * mathy::vec2<float> {SPEED, SPEED} * mathy::vec2<float> {deltaTime, deltaTime};
         } else if (currentKeyStates[SDL_SCANCODE_DOWN]) {
-            sq.position = sq.position + mathy::vec3<float>::DOWNV2() * mathy::vec3<float> {SPEED, SPEED, 0} * mathy::vec3<float> {deltaTime, deltaTime, 0};
+            sq.position = sq.position + mathy::vec2<float>::DOWN() * mathy::vec2<float> {SPEED, SPEED} * mathy::vec2<float> {deltaTime, deltaTime};
         }
 
         if (currentKeyStates[SDL_SCANCODE_LEFT]) {
-            sq.position = sq.position + mathy::vec3<float>::LEFTV2() * mathy::vec3<float> {SPEED, SPEED, 0} * mathy::vec3<float> {deltaTime, deltaTime, 0};
+            sq.position = sq.position + mathy::vec2<float>::LEFT() * mathy::vec2<float> {SPEED, SPEED} * mathy::vec2<float> {deltaTime, deltaTime};
         } else if (currentKeyStates[SDL_SCANCODE_RIGHT]) {
-            sq.position = sq.position + mathy::vec3<float>::RIGHTV2() * mathy::vec3<float> {SPEED, SPEED, 0} * mathy::vec3<float> {deltaTime, deltaTime, 0};
+            sq.position = sq.position + mathy::vec2<float>::RIGHT() * mathy::vec2<float> {SPEED, SPEED} * mathy::vec2<float> {deltaTime, deltaTime};
         }
 
         // MOVE TEXTURE
-        float move_border = (float)SCREEN_WIDTH - (float)tex.size;
+        float move_border = (float)SCREEN_WIDTH - (float)tex.size.x;
         if (tex.position.x < move_border) {
             tex.position.x += 50.0f * deltaTime;
             tex.rotation_angle += 100.0f * deltaTime;
         }
 
-        int mouseX, mouseY;
-        Uint32 mouseState = SDL_GetMouseState(&mouseX, &mouseY);
-
-        if (distance(mouseX, mouseY, tex.position.x, tex.position.y) < tex.size) {
-            tex.size = 120;
+        if (mathy::distance(mouse_pos, mathy::vec2<int>{(int)tex.position.x, (int)tex.position.y}) < ((tex.size.x + tex.size.y) / 2)) {
+            tex.size = mathy::vec2<float>{120.0f, 120.0f};
         }
         else {
-            tex.size = 80;
+            tex.size = mathy::vec2<float>{100.0f, 100.0f};
         }
         
         
@@ -116,7 +109,7 @@ int main(int argc, char* args[]) {
 
         // DRAW SQUARE
         sq.render_square();
-        mouse.render_square();
+        // mouse.render_square();
 
         // REFRESH RENDERER
         SDL_RenderPresent(renderer);

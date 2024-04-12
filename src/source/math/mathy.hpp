@@ -3,6 +3,7 @@
 #include "../../config.h"
 
 namespace mathy {
+    // VECTOR 2
     template <typename T>
     class vec2 {
     public:
@@ -46,6 +47,8 @@ namespace mathy {
         static vec2<T> LEFT() { return { T(-1), T(0)}; };
     };
 
+
+    // VECTOR 3
     template <typename T>
     class vec3 {
     public:
@@ -107,4 +110,11 @@ namespace mathy {
         static colorRGBA GREEN() { return {(Uint8)0, (Uint8)255, (Uint8)0, (Uint8)255}; };
         static colorRGBA BLUE() { return {(Uint8)0, (Uint8)0, (Uint8)255, (Uint8)255}; };
     };
+
+    // VECTOR 2 FUNCTIONS
+    double distance(mathy::vec2<int> v_1, mathy::vec2<int> v_2) {
+        return std::sqrt(std::pow(v_2.x - v_1.x, 2) + std::pow(v_2.y - v_1.y, 2));
+    }
+
+    // VECTOR 3 FUNCTIONS
 }

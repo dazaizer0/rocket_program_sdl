@@ -6,15 +6,15 @@
 namespace render {
 	class texture {
 	public:
-        mathy::vec3<float> position = mathy::vec3<float>::ZERO();
+        mathy::vec2<float> position = mathy::vec2<float>::ZERO();
+        mathy::vec2<float> size = mathy::vec2<float>::ZERO();
         SDL_Texture* sdl_texture;
         double rotation_angle{};
-        int size{};
 
-		texture(const char *path, mathy::vec3<float> position_value, float size_value, float angle_value, SDL_Renderer* renderer);
+		texture(const char *path, mathy::vec2<float> position_value, mathy::vec2<float> size_value, float angle_value, SDL_Renderer* renderer);
 
         void render_texture();
-        void dynamic_position_draw(mathy::vec3<float> new_position);
+        void dynamic_position_draw(mathy::vec2<float> new_position);
 
 		~texture();
 
@@ -29,10 +29,10 @@ namespace render {
         std::string texture_path;
 	};
 
-	texture::texture(const char *path, mathy::vec3<float> position_value, float size_value, float angle_value, SDL_Renderer *renderer) {
+	texture::texture(const char *path, mathy::vec2<float> position_value, mathy::vec2<float> size_value, float angle_value, SDL_Renderer *renderer) {
         this->renderer = renderer;
         position = position_value;
-        size = (int)size_value;
+        size = size_value;
         rotation_angle = angle_value;
 
         texture_path = path;
@@ -54,22 +54,22 @@ namespace render {
             std::cout << "texture created successfully\n";
         }
 
-        destinationRect = { (int)position.x, (int)position.y, (int)size, (int)size };
+        destinationRect = { (int)position.x, (int)position.y, (int)size.x, (int)size.y };
         center = { destinationRect.w / 2, destinationRect.h / 2 };
 	}
 
     void texture::render_texture() {
         // RENDER TEXTURE
         if ((int)position.x != destinationRect.x || (int)position.y != destinationRect.y) {
-            destinationRect = {(int) position.x, (int) position.y, (int) size, (int) size};
+            destinationRect = {(int) position.x, (int) position.y, (int) size.x, (int) size.y};
         }
 
         SDL_RenderCopyEx(renderer, sdl_texture, nullptr, &destinationRect, rotation_angle, &center, SDL_FLIP_NONE);
     }
 
-    void texture::dynamic_position_draw(mathy::vec3<float> new_position) {
+    void texture::dynamic_position_draw(mathy::vec2<float> new_position) {
         // RENDER TEXTURE
-        SDL_Rect newDestinationRect = { (int)new_position.x, (int)new_position.y, (int)size, (int)size };
+        SDL_Rect newDestinationRect = { (int)new_position.x, (int)new_position.y, (int)size.x, (int)size.y };
         SDL_RenderCopyEx(renderer, sdl_texture, nullptr, &newDestinationRect, rotation_angle, &center, SDL_FLIP_NONE);
     }
 
