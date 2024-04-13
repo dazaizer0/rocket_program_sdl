@@ -28,6 +28,9 @@ namespace render {
         position = position_value;
         size = size_value;
 
+        position.x -= size.x / 2;
+        position.y -= size.y / 2;
+
         r = color.r;
         g = color.g;
         b = color.b;

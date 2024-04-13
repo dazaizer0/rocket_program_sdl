@@ -29,6 +29,7 @@ int main(int argc, char* args[]) {
     int grid_size = 50;
     mathy::vec2<int> mouse_pos = mathy::vec2<int>::ZERO();
     bool mouse_down = false;
+    bool wkp = false;
 
     // TEXTURE
     render::texture tex = render::texture("assets/rouge.png", mathy::vec2<float>::ZERO(), mathy::vec2<float>{100.0f, 100.0f}, 0.0f, renderer);
@@ -39,6 +40,8 @@ int main(int argc, char* args[]) {
 
     // BACKGROUND
     render::texture bgtex = render::texture("assets/sonic.png", mathy::vec2<float>::ZERO(), mathy::vec2<float>{(float)grid_size, (float)grid_size}, 0.0f, renderer);
+
+    std::vector<render::square> squares = {};
 
     // MAIN LOOP
     Uint32 prevTime = SDL_GetTicks();
@@ -62,17 +65,27 @@ int main(int argc, char* args[]) {
             if (e.type == SDL_MOUSEBUTTONDOWN) {
                 mouse_down = true;
             }
-            if (e.type == SDL_MOUSEBUTTONUP) {
+            else if (e.type == SDL_MOUSEBUTTONUP) {
                 mouse_down = false;
             }
         }
 
-        SDL_GetMouseState(&mouse_pos.x, &mouse_pos.y);
+        Uint8 mouse_state = SDL_GetMouseState(&mouse_pos.x, &mouse_pos.y);
 
         // mouse.position = mathy::vec2<float>{(float)((int)(mouse_pos.x / grid_size) * grid_size), (float)((int)(mouse_pos.y / grid_size) * grid_size)};
         
          // MOVEMENT
         const Uint8* currentKeyStates = SDL_GetKeyboardState(nullptr);
+        
+        if (mouse_state & SDL_BUTTON(SDL_BUTTON_RIGHT)) {
+            if (!wkp) {
+                squares.push_back(render::square(mathy::vec2<float>{(float)mouse_pos.x, (float)mouse_pos.y}, mathy::colorRGBA::BLUE(), mathy::vec2<float>{(float)grid_size, (float)grid_size}, renderer));
+                // Oznacz klawisz W jako wcześniej wciśnięty
+                wkp = true;
+            }
+        } else {
+            wkp = false;
+        }
 
         if (currentKeyStates[SDL_SCANCODE_UP]) {
             sq.position = sq.position + mathy::vec2<float>::UP() * mathy::vec2<float> {SPEED, SPEED} * mathy::vec2<float> {deltaTime, deltaTime};
@@ -120,6 +133,11 @@ int main(int argc, char* args[]) {
         // DRAW SQUARE
         sq.render_square();
         // mouse.render_square();
+
+        for (int i = 0; i < squares.size(); i++) {
+            squares[i].render_square();
+        }
+        
 
         // REFRESH RENDERER
         SDL_RenderPresent(renderer);

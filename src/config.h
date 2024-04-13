@@ -16,6 +16,7 @@
 // BASIC
 #include <iostream>
 #include <cmath>
+#include <vector>
 
 // SOURCE
 #include "source/math/mathy.hpp"
