@@ -28,6 +28,7 @@ int main(int argc, char* args[]) {
 
     int grid_size = 50;
     mathy::vec2<int> mouse_pos = mathy::vec2<int>::ZERO();
+    bool mouse_clicked = false;
 
     // TEXTURE
     render::texture tex = render::texture("assets/rouge.png", mathy::vec2<float>::ZERO(), mathy::vec2<float>{100.0f, 100.0f}, 0.0f, renderer);
@@ -57,6 +58,13 @@ int main(int argc, char* args[]) {
             } else if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_ESCAPE) {
                 quit = true;
             }
+
+            if (e.type == SDL_MOUSEBUTTONDOWN) {
+                mouse_clicked = true;
+            }
+            if (e.type == SDL_MOUSEBUTTONUP) {
+                mouse_clicked = false;
+            }
         }
 
         SDL_GetMouseState(&mouse_pos.x, &mouse_pos.y);
@@ -78,15 +86,19 @@ int main(int argc, char* args[]) {
             sq.position = sq.position + mathy::vec2<float>::RIGHT() * mathy::vec2<float> {SPEED, SPEED} * mathy::vec2<float> {deltaTime, deltaTime};
         }
 
-        // MOVE TEXTURE
-        float move_border = (float)SCREEN_WIDTH - (float)tex.size.x;
-        if (tex.position.x < move_border) {
-            tex.position.x += 50.0f * deltaTime;
-            tex.rotation_angle += 100.0f * deltaTime;
-        }
+        // MOVE AND ROTATE TEXTURE
+        // float move_border = (float)SCREEN_WIDTH - (float)tex.size.x;
+        // if (tex.position.x < move_border) {
+        //     tex.position.x += 50.0f * deltaTime;
+        //     tex.rotation_angle += 100.0f * deltaTime;
+        // }
 
         if (mathy::distance(mouse_pos, mathy::vec2<int>{(int)tex.position.x, (int)tex.position.y}) < ((tex.size.x + tex.size.y) / 2)) {
             tex.size = mathy::vec2<float>{120.0f, 120.0f};
+
+            if (mouse_clicked) {
+                tex.position = mathy::vec2<float>{(float)mouse_pos.x, (float)mouse_pos.y};
+            }
         }
         else {
             tex.size = mathy::vec2<float>{100.0f, 100.0f};

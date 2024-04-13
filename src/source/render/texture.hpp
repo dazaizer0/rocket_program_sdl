@@ -59,13 +59,15 @@ namespace render {
 	}
 
     void texture::render_texture() {
-        // RENDER TEXTURE
-        if ((int)position.x != destinationRect.x || (int)position.y != destinationRect.y) {
-            destinationRect = {(int) position.x, (int) position.y, (int) size.x, (int) size.y};
-        }
-
-        SDL_RenderCopyEx(renderer, sdl_texture, nullptr, &destinationRect, rotation_angle, &center, SDL_FLIP_NONE);
+    // RENDER TEXTURE
+    if ((int)position.x != destinationRect.x || (int)position.y != destinationRect.y) {
+        destinationRect = {(int) (position.x - size.x / 2), (int) (position.y - size.y / 2), (int) size.x, (int) size.y};
+        center = {destinationRect.w / 2, destinationRect.h / 2};
     }
+
+    SDL_RenderCopyEx(renderer, sdl_texture, nullptr, &destinationRect, rotation_angle, &center, SDL_FLIP_NONE);
+}
+
 
     void texture::dynamic_position_draw(mathy::vec2<float> new_position) {
         // RENDER TEXTURE
