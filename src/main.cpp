@@ -28,7 +28,7 @@ int main(int argc, char* args[]) {
 
     int grid_size = 50;
     mathy::vec2<int> mouse_pos = mathy::vec2<int>::ZERO();
-    bool mouse_clicked = false;
+    bool mouse_down = false;
 
     // TEXTURE
     render::texture tex = render::texture("assets/rouge.png", mathy::vec2<float>::ZERO(), mathy::vec2<float>{100.0f, 100.0f}, 0.0f, renderer);
@@ -60,10 +60,10 @@ int main(int argc, char* args[]) {
             }
 
             if (e.type == SDL_MOUSEBUTTONDOWN) {
-                mouse_clicked = true;
+                mouse_down = true;
             }
             if (e.type == SDL_MOUSEBUTTONUP) {
-                mouse_clicked = false;
+                mouse_down = false;
             }
         }
 
@@ -94,16 +94,14 @@ int main(int argc, char* args[]) {
         // }
 
         if (mathy::distance(mouse_pos, mathy::vec2<int>{(int)tex.position.x, (int)tex.position.y}) < ((tex.size.x + tex.size.y) / 2)) {
-            tex.size = mathy::vec2<float>{120.0f, 120.0f};
-
-            if (mouse_clicked) {
+            if (mouse_down) {
+                tex.size = mathy::vec2<float>{120.0f, 120.0f};
                 tex.position = mathy::vec2<float>{(float)mouse_pos.x, (float)mouse_pos.y};
             }
+            else {
+                tex.size = mathy::vec2<float>{100.0f, 100.0f};
+            }
         }
-        else {
-            tex.size = mathy::vec2<float>{100.0f, 100.0f};
-        }
-        
         
         // CLEAR SCREEN
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
