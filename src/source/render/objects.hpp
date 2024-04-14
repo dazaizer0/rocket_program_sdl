@@ -1,21 +1,30 @@
 #pragma once
 
+#include <vector>
+
 namespace rnd {
-	// RENDERER
-	class objects_renderer {
+	class elementary_object  {
+	public:
+		elementary_object() {
+
+		}
+	private:
 
 	};
 
-	// OBJECTS
-	class point {
+	class physics_object : public elementary_object {
+	public:
+		physics_object() {
+
+		}
+	private:
 
 	};
 
-	class object : public point {
-
-	};
-
-	class textured_object : public object {
-
+	class physics_manager {
+	public:
+		std::vector<elementary_object> objects;
+	private:
+	
 	};
 }
