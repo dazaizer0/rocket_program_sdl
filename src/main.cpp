@@ -14,12 +14,12 @@ int to_gridint(float n, int grid_size) {
 }
 
 bool is_position_free(const mathy::vec2<int>& pos, const std::vector<std::vector<bool>>& grid, int grid_size) {
-    if (pos.x < 0 || pos.x >= SCREEN_WIDTH || pos.y < 0 || pos.y >= SCREEN_HEIGHT) 
+    if (pos.x < 0 || pos.x >= SCREEN_WIDTH || pos.y < 0 || pos.y >= SCREEN_HEIGHT)
         return false;
-    
+
     int grid_x = pos.x / grid_size;
     int grid_y = pos.y / grid_size;
-    return !grid[grid_x][grid_y]; 
+    return !grid[grid_x][grid_y];
 }
 
 int main(int argc, char* args[]) {
@@ -40,7 +40,7 @@ int main(int argc, char* args[]) {
     // RENDERER
     SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_PRESENTVSYNC | SDL_RENDERER_ACCELERATED);
 
-    int grid_size = 50; 
+    int grid_size = 50;
 
     mathy::vec2<int> mouse_pos = mathy::vec2<int>::ZERO();
     bool mouse_left_down = false;
@@ -111,7 +111,7 @@ int main(int argc, char* args[]) {
                 grid[grid_pos.x / grid_size][grid_pos.y / grid_size] = true;
                 std::cout << "blue square has been placed\n";
             }
-        }      
+        }
 
         if (currentKeyStates[SDL_SCANCODE_UP]) {
             sq.position = sq.position + mathy::vec2<float>::UP() * mathy::vec2<float> {SPEED, SPEED} *mathy::vec2<float> {deltaTime, deltaTime};
@@ -133,7 +133,7 @@ int main(int argc, char* args[]) {
 
             if (squares.size() == 0 && temp_size > 0)
                 std::cout << "squares have been succesfully deleted\n";
-            
+
             for (int x = 0; x < grid.size(); x++) {
                 for (int y = 0; y < grid[x].size(); y++) {
                     grid[x][y] = false;
@@ -141,7 +141,7 @@ int main(int argc, char* args[]) {
             }
         }
 
-        if (mathy::distance(mouse_pos, mathy::vec2<int>{(int)tex.position.x, (int)tex.position.y}) < ((tex.size.x + tex.size.y) / 2) && mouse_state && SDL_BUTTON(SDL_BUTTON_LEFT)) {
+        if (mathy::distance(mouse_pos, mathy::vec2<int>{(int)tex.position.x, (int)tex.position.y}) < ((tex.size.x + tex.size.y) / 2) && mouse_state&& SDL_BUTTON(SDL_BUTTON_LEFT)) {
             if (mouse_left_down) {
                 tex.size = mathy::vec2<float>{ 120.0f, 120.0f };
                 tex.position = mathy::vec2<float>{ (float)mouse_pos.x, (float)mouse_pos.y };
