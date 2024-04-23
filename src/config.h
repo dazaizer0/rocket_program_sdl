@@ -19,4 +19,4 @@
 #include <vector>
 
 // SOURCE
-#include "source/math/mathy.hpp"
+#include "math/mathy.hpp"
