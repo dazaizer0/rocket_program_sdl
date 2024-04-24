@@ -15,3 +15,9 @@
     # cd build
     # cmake ../
     # make
+
+
+    learn: 
+    https://www.parallelrealities.co.uk/tutorials/
+    https://lazyfoo.net/tutorials/SDL/
+    https://wiki.libsdl.org/SDL2/FrontPage

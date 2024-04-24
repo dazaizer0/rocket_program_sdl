@@ -34,14 +34,12 @@ elseif(UNIX AND NOT APPLE)
 
 endif()
 
+
 add_executable(${PROJECT_NAME}
         src/main.cpp
         src/config.h
-        src/math/mathy.hpp
-        src/render/square.hpp
-        src/render/texture.hpp
-        src/render/objects.hpp
 )
+
 
 if(WIN32)
 
