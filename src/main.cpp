@@ -87,6 +87,7 @@ protected:
     size_t skarabeusze_size = sizeof(skarabeusze) / sizeof(skarabeusze[0]);
 
     int actual_skarabeusz_index{};
+    int previous_skarbeusz_index{100};
 
 public:
     Game(SDL_Renderer* rend) : Scene(rend) {}
@@ -99,7 +100,7 @@ public:
         skarabeusze[2].neighbours_indexes = { 6, 8 };
         skarabeusze[3].neighbours_indexes = { 8, 9 };
         skarabeusze[4].neighbours_indexes = { 0, 5 };
-        skarabeusze[5].neighbours_indexes = { 4, 1, 6, 10 };
+        skarabeusze[5].neighbours_indexes = { 0, 1, 4, 6, 10 };
     }
 
     virtual void handleEvents(SDL_Event& event) override {
@@ -128,13 +129,16 @@ public:
         for (int i = 0; i < skarabeusze_size; i++) {
             if (mathy::distance(mouse_pos, skarabeusze[i].position) < ((skarabeusze[i].size.x + skarabeusze[i].size.y) / 8) && mouse_state && mouse_left_down) {
                 if (skarabeusze[i].can_select || first_move) {
-                    skarabeusze[i].state = selected;
-                    actual_skarabeusz_index = i;
-                    std::cout << i << '\n';
-                    first_move = false;
-                    
-                    for (int j = 0; j < skarabeusze_size; j++) {
-                        skarabeusze[j].can_select = false;
+                    if (i != previous_skarbeusz_index) {
+                        skarabeusze[i].state = selected;
+                        previous_skarbeusz_index = actual_skarabeusz_index;
+                        actual_skarabeusz_index = i;
+                        std::cout << "actual: " << i << "\n previos: " << previous_skarbeusz_index << '\n';
+                        first_move = false;
+
+                        for (int j = 0; j < skarabeusze_size; j++) {
+                            skarabeusze[j].can_select = false;
+                        }
                     }
                 }
             }
