@@ -95,6 +95,11 @@ public:
         flap.enabled = false;
 
         skarabeusze[0].neighbours_indexes = { 4, 5 };
+        skarabeusze[1].neighbours_indexes = { 5, 6 };
+        skarabeusze[2].neighbours_indexes = { 6, 8 };
+        skarabeusze[3].neighbours_indexes = { 8, 9 };
+        skarabeusze[4].neighbours_indexes = { 0, 5 };
+        skarabeusze[5].neighbours_indexes = { 4, 1, 6, 10 };
     }
 
     virtual void handleEvents(SDL_Event& event) override {
