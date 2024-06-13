@@ -38,8 +38,11 @@ endif()
 add_executable(${PROJECT_NAME}
         src/main.cpp
         src/config.h
-
-        src/mathy.hpp
+        src/skarabeusz.hpp
+        src/source/math/mathy.hpp
+        src/source/render/square.hpp
+        src/source/render/texture.hpp
+        src/source/render/objects.hpp
 )
 
 

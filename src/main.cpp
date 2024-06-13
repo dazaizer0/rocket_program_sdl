@@ -1,10 +1,11 @@
 #include "config.h"
 
+#include "source/render/texture.hpp"
+#include "skarabeusz.hpp"
 
-const int SCREEN_WIDTH = 640;
-const int SCREEN_HEIGHT = 480;
 
-int SQUARE_SIZE = 50;
+const int SCREEN_WIDTH = 1024;
+const int SCREEN_HEIGHT = 768;
 
 class Scene {
 protected:
@@ -13,6 +14,8 @@ protected:
 
 public:
     Scene(SDL_Renderer* rend) : renderer(rend), quit(false) {}
+
+    virtual void start() {};
 
     virtual void handleEvents(SDL_Event& event) {};
 
@@ -24,6 +27,8 @@ public:
     }
 
     virtual void run() {
+        start();
+
         while (!quit) {
             SDL_Event event;
             while (SDL_PollEvent(&event)) {
@@ -38,15 +43,59 @@ public:
     virtual ~Scene() {}
 };
 
-class GreenScene : public Scene {
+class Game : public Scene {
 protected:
     mathy::vec2<int> mouse_pos = mathy::vec2<int>::ZERO();
-    mathy::vec2<int> square_pos = mathy::vec2<int>{ 300, 300 };
     bool mouse_left_down{ false };
     Uint8 mouse_state{};
 
+    bool first_move{ true };
+
+    render::texture bg = render::texture("res/bg.png", mathy::vec2<int>{512, 384}, mathy::vec2<int>{1024, 768}, 0.0f, renderer);
+
+    render::texture flap = render::texture("res/x.png", mathy::vec2<int>{512, 384}, mathy::vec2<int>{1024, 1024}, 0.0f, renderer);
+    bool flap_open = false;
+
+    Skarabeusz skarabeusze[25] = {
+        Skarabeusz(renderer, mathy::vec2<int>{198, 168}, mathy::vec2<int>{80, 95}, 0.0f),
+        Skarabeusz(renderer, mathy::vec2<int>{334, 168}, mathy::vec2<int>{80, 95}, 0.0f),
+        Skarabeusz(renderer, mathy::vec2<int>{511, 130}, mathy::vec2<int>{80, 95}, 0.0f),
+        Skarabeusz(renderer, mathy::vec2<int>{690, 166}, mathy::vec2<int>{80, 95}, 0.0f),
+        Skarabeusz(renderer, mathy::vec2<int>{130, 246}, mathy::vec2<int>{80, 95}, 0.0f),
+        Skarabeusz(renderer, mathy::vec2<int>{265, 243}, mathy::vec2<int>{80, 95}, 0.0f),
+        Skarabeusz(renderer, mathy::vec2<int>{410, 248}, mathy::vec2<int>{80, 95}, 0.0f),
+        Skarabeusz(renderer, mathy::vec2<int>{510, 235}, mathy::vec2<int>{80, 95}, 0.0f),
+        Skarabeusz(renderer, mathy::vec2<int>{614, 248}, mathy::vec2<int>{80, 95}, 0.0f),
+        Skarabeusz(renderer, mathy::vec2<int>{758, 248}, mathy::vec2<int>{80, 95}, 0.0f),
+        Skarabeusz(renderer, mathy::vec2<int>{245, 393}, mathy::vec2<int>{80, 95}, 0.0f),
+        Skarabeusz(renderer, mathy::vec2<int>{440, 394}, mathy::vec2<int>{80, 95}, 0.0f),
+        Skarabeusz(renderer, mathy::vec2<int>{509, 330}, mathy::vec2<int>{80, 95}, 0.0f),
+        Skarabeusz(renderer, mathy::vec2<int>{582, 398}, mathy::vec2<int>{80, 95}, 0.0f),
+        Skarabeusz(renderer, mathy::vec2<int>{782, 393}, mathy::vec2<int>{80, 95}, 0.0f),
+        Skarabeusz(renderer, mathy::vec2<int>{275, 565}, mathy::vec2<int>{80, 95}, 0.0f),
+        Skarabeusz(renderer, mathy::vec2<int>{414, 562}, mathy::vec2<int>{80, 95}, 0.0f),
+        Skarabeusz(renderer, mathy::vec2<int>{509, 486}, mathy::vec2<int>{80, 95}, 0.0f),
+        Skarabeusz(renderer, mathy::vec2<int>{513, 613}, mathy::vec2<int>{80, 95}, 0.0f),
+        Skarabeusz(renderer, mathy::vec2<int>{612, 557}, mathy::vec2<int>{80, 95}, 0.0f),
+        Skarabeusz(renderer, mathy::vec2<int>{749, 562}, mathy::vec2<int>{80, 95}, 0.0f),
+        Skarabeusz(renderer, mathy::vec2<int>{880, 566}, mathy::vec2<int>{80, 95}, 0.0f),
+        Skarabeusz(renderer, mathy::vec2<int>{341, 642}, mathy::vec2<int>{80, 95}, 0.0f),
+        Skarabeusz(renderer, mathy::vec2<int>{682, 636}, mathy::vec2<int>{80, 95}, 0.0f),
+        Skarabeusz(renderer, mathy::vec2<int>{824, 642}, mathy::vec2<int>{80, 95}, 0.0f)
+    };
+
+    size_t skarabeusze_size = sizeof(skarabeusze) / sizeof(skarabeusze[0]);
+
+    int actual_skarabeusz_index{};
+
 public:
-    GreenScene(SDL_Renderer* rend) : Scene(rend) {}
+    Game(SDL_Renderer* rend) : Scene(rend) {}
+
+    virtual void start() override {
+        flap.enabled = false;
+
+        skarabeusze[0].neighbours_indexes = { 4, 5 };
+    }
 
     virtual void handleEvents(SDL_Event& event) override {
         if (event.type == SDL_QUIT) {
@@ -71,14 +120,40 @@ public:
     virtual void update() override {
         mouse_state = SDL_GetMouseState(&mouse_pos.x, &mouse_pos.y);
 
-        if (mathy::distance(mouse_pos, square_pos)) {
-            if (mouse_left_down) {
-                square_pos = mathy::vec2<int>{ mouse_pos.x - SQUARE_SIZE / 2, mouse_pos.y - SQUARE_SIZE / 2 };
-                SQUARE_SIZE = 55;
+        for (int i = 0; i < skarabeusze_size; i++) {
+            if (mathy::distance(mouse_pos, skarabeusze[i].position) < ((skarabeusze[i].size.x + skarabeusze[i].size.y) / 8) && mouse_state && mouse_left_down) {
+                if (skarabeusze[i].can_select || first_move) {
+                    skarabeusze[i].state = selected;
+                    actual_skarabeusz_index = i;
+                    std::cout << i << '\n';
+                    first_move = false;
+                    
+                    for (int j = 0; j < skarabeusze_size; j++) {
+                        skarabeusze[j].can_select = false;
+                    }
+                }
+            }
+        }
+
+        for (int i = 0; i < skarabeusze[actual_skarabeusz_index].neighbours_indexes.size(); i++) {
+            skarabeusze[skarabeusze[actual_skarabeusz_index].neighbours_indexes[i]].can_select = true;
+        }
+
+        if (mouse_left_down)
+            std::cout << "x: " << mouse_pos.x << " y : " << mouse_pos.y << '\n';
+
+        for (int i = 0; i < skarabeusze_size; i++) {
+            if (skarabeusze[i].state == empty) {
+                flap_open = false;
             }
             else {
-                SQUARE_SIZE = 50;
+                flap_open = true;
             }
+        }
+
+        if (flap_open) {
+            flap.enabled = true;
+            skarabeusze[12].enabled = false;
         }
     }
 
@@ -86,34 +161,12 @@ public:
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
         SDL_RenderClear(renderer);
 
-        SDL_Rect square = { square_pos.x, square_pos.y, SQUARE_SIZE, SQUARE_SIZE };
-        SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
-        SDL_RenderFillRect(renderer, &square);
+        bg.render_texture();
+        flap.render_texture();
 
-        SDL_RenderPresent(renderer);
-    }
-};
-
-class RedScene : public Scene {
-public:
-    RedScene(SDL_Renderer* rend) : Scene(rend) {}
-
-    virtual void handleEvents(SDL_Event& event) override {
-        if (event.type == SDL_QUIT) {
-            quitScene();
+        for (int i = 0; i < skarabeusze_size; i++) {
+            skarabeusze[i].render();
         }
-        else if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_ESCAPE) {
-            quitScene();
-        }
-    }
-
-    virtual void render() override {
-        SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
-        SDL_RenderClear(renderer);
-
-        SDL_Rect square = { (SCREEN_WIDTH - SQUARE_SIZE) / 2, (SCREEN_HEIGHT - SQUARE_SIZE) / 2, SQUARE_SIZE, SQUARE_SIZE };
-        SDL_SetRenderDrawColor(renderer, 0, 0, 255, 255);
-        SDL_RenderFillRect(renderer, &square);
 
         SDL_RenderPresent(renderer);
     }
@@ -125,7 +178,7 @@ int main(int argc, char* args[]) {
     SDL_Window* window = SDL_CreateWindow("YUMESDL2", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
     SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 
-    GreenScene greenScene(renderer);
+    Game greenScene(renderer);
 
     Scene* currentScene = &greenScene;
     currentScene->run();
