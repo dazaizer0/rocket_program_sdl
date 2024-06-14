@@ -17,6 +17,7 @@ public:
 
     bool enabled{ true };
     bool can_select{ false };
+    bool was_confirmed{ false };
 
     render::texture gold;
     render::texture blue;

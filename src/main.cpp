@@ -4,8 +4,8 @@
 #include "skarabeusz.hpp"
 
 
-const int SCREEN_WIDTH = 1024;
-const int SCREEN_HEIGHT = 768;
+const int SCREEN_WIDTH{ 1024 };
+const int SCREEN_HEIGHT{ 768 };
 
 class Scene {
 protected:
@@ -54,7 +54,6 @@ protected:
     render::texture bg = render::texture("res/bg.png", mathy::vec2<int>{512, 384}, mathy::vec2<int>{1024, 768}, 0.0f, renderer);
 
     render::texture flap = render::texture("res/x.png", mathy::vec2<int>{512, 384}, mathy::vec2<int>{1024, 1024}, 0.0f, renderer);
-    bool flap_open = false;
 
     Skarabeusz skarabeusze[25] = {
         Skarabeusz(renderer, mathy::vec2<int>{198, 168}, mathy::vec2<int>{80, 95}, 0.0f),
@@ -84,10 +83,12 @@ protected:
         Skarabeusz(renderer, mathy::vec2<int>{824, 642}, mathy::vec2<int>{80, 95}, 0.0f)
     };
 
-    size_t skarabeusze_size = sizeof(skarabeusze) / sizeof(skarabeusze[0]);
+    size_t skarabeusze_size{ sizeof(skarabeusze) / sizeof(skarabeusze[0]) };
 
     int actual_skarabeusz_index{};
     int previous_skarbeusz_index{100};
+
+    std::vector<std::string> connections;
 
 public:
     Game(SDL_Renderer* rend) : Scene(rend) {}
@@ -101,6 +102,29 @@ public:
         skarabeusze[3].neighbours_indexes = { 8, 9 };
         skarabeusze[4].neighbours_indexes = { 0, 5 };
         skarabeusze[5].neighbours_indexes = { 0, 1, 4, 6, 10 };
+        skarabeusze[6].neighbours_indexes = { 1, 2, 7, 11, 10, 5 };
+        skarabeusze[7].neighbours_indexes = { 6, 8 };
+        skarabeusze[8].neighbours_indexes = { 2, 3, 7, 9, 13 };
+        skarabeusze[9].neighbours_indexes = { 3, 8, 14 };
+        skarabeusze[10].neighbours_indexes = { 5, 6, 11, 15 };
+        skarabeusze[11].neighbours_indexes = { 10, 6, 12, 17, 16, 15 };
+        skarabeusze[12].neighbours_indexes = { 11, 13 };
+        skarabeusze[13].neighbours_indexes = { 12, 17, 19, 20, 14, 8 };
+        skarabeusze[14].neighbours_indexes = { 13, 8, 9, 20 };
+        skarabeusze[15].neighbours_indexes = { 10, 11, 16, 22 };
+        skarabeusze[16].neighbours_indexes = { 15, 11, 18, 22 };
+        skarabeusze[17].neighbours_indexes = { 11, 13 };
+        skarabeusze[18].neighbours_indexes = { 16, 19 };
+        skarabeusze[19].neighbours_indexes = { 18, 13, 20, 23 };
+        skarabeusze[20].neighbours_indexes = { 19, 13, 14, 21, 24, 23 };
+        skarabeusze[21].neighbours_indexes = { 20, 24 };
+        skarabeusze[22].neighbours_indexes = { 15, 16 };
+        skarabeusze[23].neighbours_indexes = { 19, 20 };
+        skarabeusze[24].neighbours_indexes = { 20, 21};
+
+        for (int i = 0; i < skarabeusze_size; i++) {
+            skarabeusze[i].state = selected;
+        }
     }
 
     virtual void handleEvents(SDL_Event& event) override {
@@ -130,14 +154,21 @@ public:
             if (mathy::distance(mouse_pos, skarabeusze[i].position) < ((skarabeusze[i].size.x + skarabeusze[i].size.y) / 8) && mouse_state && mouse_left_down) {
                 if (skarabeusze[i].can_select || first_move) {
                     if (i != previous_skarbeusz_index) {
-                        skarabeusze[i].state = selected;
+                        skarabeusze[i].state = confirmed;
                         previous_skarbeusz_index = actual_skarabeusz_index;
                         actual_skarabeusz_index = i;
                         std::cout << "actual: " << i << "\n previos: " << previous_skarbeusz_index << '\n';
                         first_move = false;
+                        skarabeusze[i].was_confirmed = true;
 
                         for (int j = 0; j < skarabeusze_size; j++) {
                             skarabeusze[j].can_select = false;
+                            if (!skarabeusze[j].was_confirmed) {
+                                skarabeusze[j].state = empty;
+                            }
+                            else {
+                                skarabeusze[j].state = confirmed;
+                            }
                         }
                     }
                 }
@@ -145,25 +176,31 @@ public:
         }
 
         for (int i = 0; i < skarabeusze[actual_skarabeusz_index].neighbours_indexes.size(); i++) {
-            skarabeusze[skarabeusze[actual_skarabeusz_index].neighbours_indexes[i]].can_select = true;
+            if (!first_move) {
+                skarabeusze[skarabeusze[actual_skarabeusz_index].neighbours_indexes[i]].can_select = true;
+                if (skarabeusze[actual_skarabeusz_index].neighbours_indexes[i] != previous_skarbeusz_index)
+                    skarabeusze[skarabeusze[actual_skarabeusz_index].neighbours_indexes[i]].state = selected;
+            }
         }
 
         if (mouse_left_down)
             std::cout << "x: " << mouse_pos.x << " y : " << mouse_pos.y << '\n';
 
-        for (int i = 0; i < skarabeusze_size; i++) {
-            if (skarabeusze[i].state == empty) {
-                flap_open = false;
-            }
-            else {
-                flap_open = true;
+        // TODO: PO£¥CZENIA 
+
+        /*bool all_confirmed = true;
+
+        for (const auto& skarabeusz : skarabeusze) {
+            if (skarabeusz.state != empty) {
+                all_confirmed = false;
+                break;
             }
         }
 
-        if (flap_open) {
+        if (all_confirmed) {
             flap.enabled = true;
             skarabeusze[12].enabled = false;
-        }
+        }*/
     }
 
     virtual void render() override {
