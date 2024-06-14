@@ -14,5 +14,6 @@
 #include <iostream>
 #include <cmath>
 #include <vector>
+#include <string>
 
 #include "source/math/mathy.hpp"

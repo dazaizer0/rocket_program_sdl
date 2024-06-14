@@ -39,6 +39,7 @@ add_executable(${PROJECT_NAME}
         src/main.cpp
         src/config.h
         src/skarabeusz.hpp
+        src/connection.hpp
         src/source/math/mathy.hpp
         src/source/render/square.hpp
         src/source/render/texture.hpp
