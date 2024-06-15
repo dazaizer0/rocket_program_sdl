@@ -86,10 +86,22 @@ protected:
     bool can_move = true;
     bool finished = false;
 
+    Mix_Music* music;
+    Mix_Chunk* put_sound;
 public:
     Game(SDL_Renderer* rend) : Scene(rend) {}
 
     virtual void start() override {
+        music = Mix_LoadMUS("res/retro-egyptian.mp3");
+        put_sound = Mix_LoadWAV("res/select.wav");
+        if (!music) {
+            printf("Mix_LoadMUS Error: %s\n", Mix_GetError());
+        }
+
+        if (Mix_PlayMusic(music, -1) == -1) {
+            printf("Mix_PlayMusic Error: %s\n", Mix_GetError());
+        }
+
         flap.enabled = false;
 
         skarabeusze[0].neighbours_indexes = { 4, 5 };
@@ -191,6 +203,8 @@ public:
                             actual_skarabeusz_index = temp_actual_skarabeusz_index;
                             previous_skarabeusz_index = temp_previous_skarabeusz_index;
                         }
+
+                        Mix_PlayChannel(1, put_sound, 0);
                     }
                 }
             }
@@ -262,7 +276,16 @@ public:
 };
 
 int main(int argc, char* args[]) {
-    SDL_Init(SDL_INIT_VIDEO);
+    if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) != 0) {
+        printf("SDL_Init Error: %s\n", SDL_GetError());
+        return 1;
+    }
+
+    if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) == -1) {
+        printf("Mix_OpenAudio Error: %s\n", Mix_GetError());
+        SDL_Quit();
+        return 1;
+    }
 
     SDL_Window* window = SDL_CreateWindow("YUMESDL2", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
     SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
@@ -271,9 +294,11 @@ int main(int argc, char* args[]) {
     Scene* currentScene = &gameScene;
     currentScene->run();
 
+    Mix_CloseAudio();
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
     SDL_Quit();
 
     return 0;
 }
+
