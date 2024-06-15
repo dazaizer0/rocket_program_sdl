@@ -47,6 +47,7 @@ protected:
 
     render::texture bg = render::texture("res/bg.png", { 512, 384 }, { 1024, 768 }, 0.0f, renderer);
     render::texture flap = render::texture("res/x.png", { 512, 384 }, { 1024, 1024 }, 0.0f, renderer);
+    render::texture key = render::texture("res/key.png", { 512, 384 }, { 200, 100 }, 0.0f, renderer);
 
     Skarabeusz skarabeusze[25] = {
         Skarabeusz(renderer, {198, 168}, {80, 95}, 0.0f),
@@ -88,12 +89,15 @@ protected:
 
     Mix_Music* music;
     Mix_Chunk* put_sound;
+    Mix_Chunk* finish_sound;
+    bool finish_played = false;
 public:
     Game(SDL_Renderer* rend) : Scene(rend) {}
 
     virtual void start() override {
         music = Mix_LoadMUS("res/retro-egyptian.mp3");
         put_sound = Mix_LoadWAV("res/select.wav");
+        finish_sound = Mix_LoadWAV("res/finish.wav");
         if (!music) {
             printf("Mix_LoadMUS Error: %s\n", Mix_GetError());
         }
@@ -103,6 +107,7 @@ public:
         }
 
         flap.enabled = false;
+        key.enabled = false;
 
         skarabeusze[0].neighbours_indexes = { 4, 5 };
         skarabeusze[1].neighbours_indexes = { 5, 6 };
@@ -141,6 +146,9 @@ public:
         }
         else if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_ESCAPE) {
             quitScene();
+        }
+        else if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_f) {
+            finished = true;
         }
 
         if (event.type == SDL_MOUSEBUTTONDOWN) {
@@ -245,13 +253,23 @@ public:
 
         if (all_confirmed_or_selected && !first_move) {
             finished = true;
-            std::cout << "FINISH\n";
         }
 
         if (finished) {
-            std::cout << "FINISH\n";
             flap.enabled = true;
+            key.enabled = true;
             skarabeusze[12].enabled = false;
+
+            if (key.size.y < 150) {
+                key.size = mathy::vec2<int>{ key.size.x += 1, key.size.y += 1 };
+                key.position.y -= 1;
+                key.update_destination_rect();
+            }
+
+            if (!finish_played) {
+                Mix_PlayChannel(2, finish_sound, 0);
+                finish_played = true;
+            }
         }
     }
 
@@ -270,6 +288,8 @@ public:
         for (int i = 0; i < skarabeusze_size; i++) {
             skarabeusze[i].render();
         }
+
+        key.render_texture();
 
         SDL_RenderPresent(renderer);
     }

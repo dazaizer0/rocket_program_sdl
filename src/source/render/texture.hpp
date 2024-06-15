@@ -16,6 +16,7 @@ namespace render {
 
         void render_texture();
         void dynamic_position_draw(mathy::vec2<int> new_position);
+        void update_destination_rect();
 
         ~texture();
 
@@ -27,8 +28,6 @@ namespace render {
         SDL_Point center{}; // center
 
         std::string texture_path;
-
-        void update_destination_rect();
     };
 
     texture::texture(const char* path, mathy::vec2<int> position_value, mathy::vec2<int> size_value, float angle_value, SDL_Renderer* renderer) {
