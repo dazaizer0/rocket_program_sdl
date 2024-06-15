@@ -4,6 +4,7 @@
 
 const int SCREEN_WIDTH = 1024;
 const int SCREEN_HEIGHT = 768;
+bool END = false;
 
 class Scene {
 protected:
@@ -52,7 +53,9 @@ protected:
     render::texture flap = render::texture("res/x.png", { 512, 384 }, { 1024, 1024 }, 0.0f, renderer);
     render::texture key = render::texture("res/key.png", { 512, 384 }, { 200, 100 }, 0.0f, renderer);
 
-    render::texture sm_btn = render::texture("res/sm_btn.png", { 200, 700 }, { 200, 75 }, 0.0f, renderer);
+    render::texture sm_btn = render::texture("res/sm_btn.png", { 100, 720 }, { 150, 55 }, 0.0f, renderer);
+    render::texture restart_btn = render::texture("res/restart_btn.png", { 270, 720 }, { 150, 55 }, 0.0f, renderer);
+    render::texture lost_image = render::texture("res/lost_image.png", { 512, 384 }, { 550, 200 }, 0.0f, renderer);
 
     Skarabeusz skarabeusze[25] = {
         Skarabeusz(renderer, {198, 168}, {80, 95}, 0.0f),
@@ -84,6 +87,7 @@ protected:
     size_t skarabeusze_size = sizeof(skarabeusze) / sizeof(skarabeusze[0]);
 
     std::vector<Line> connection_lines;
+    std::vector<Line> connection_lines_light;
     std::vector<std::string> connections;
 
     int actual_skarabeusz_index = 0;
@@ -91,6 +95,7 @@ protected:
 
     bool can_move = true;
     bool finished = false;
+    bool key_collected = false;
 
     Mix_Music* music;
     Mix_Chunk* put_sound;
@@ -113,6 +118,7 @@ public:
 
         flap.enabled = false;
         key.enabled = false;
+        lost_image.enabled = false;
 
         skarabeusze[0].neighbours_indexes = { 4, 5 };
         skarabeusze[1].neighbours_indexes = { 5, 6 };
@@ -148,9 +154,11 @@ public:
     virtual void handleEvents(SDL_Event& event) override {
         if (event.type == SDL_QUIT) {
             quitScene();
+            END = true;
         }
         else if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_ESCAPE) {
             quitScene();
+            END = true;
         }
         else if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_f) {
             finished = true;
@@ -172,7 +180,7 @@ public:
         mouse_state = SDL_GetMouseState(&mouse_pos.x, &mouse_pos.y);
         can_move = false;
 
-        if (mathy::distance(mouse_pos, sm_btn.position) < ((sm_btn.size.x + sm_btn.size.y) / 8) && mouse_state && mouse_left_down) {
+        if (mathy::distance(mouse_pos, sm_btn.position) < ((sm_btn.size.x + sm_btn.size.y) / 2) && mouse_state && mouse_left_down) {
             if (!fullscreen) {
                 SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN);
                 fullscreen = true;
@@ -183,8 +191,18 @@ public:
             }
         }
 
+        if (mathy::distance(mouse_pos, restart_btn.position) < ((restart_btn.size.x + restart_btn.size.y) / 2) && mouse_state && mouse_left_down) {
+            quitScene();
+        }
+
+        if (mathy::distance(mouse_pos, key.position) < ((key.size.x + key.size.y) / 2) && mouse_state && mouse_left_down && finished) {
+            key.position = mouse_pos;
+            key.update_destination_rect();
+            key_collected = true;
+        }
+
         for (int i = 0; i < skarabeusze_size; i++) {
-            if (mathy::distance(mouse_pos, skarabeusze[i].position) < ((skarabeusze[i].size.x + skarabeusze[i].size.y) / 8) && mouse_state && mouse_left_down) {
+            if (mathy::distance(mouse_pos, skarabeusze[i].position) < ((skarabeusze[i].size.x + skarabeusze[i].size.y) / 8) && mouse_state && mouse_left_down && !key_collected) {
                 if (skarabeusze[i].can_select || first_move) {
                     if (i != previous_skarabeusz_index) {
                         int temp_actual_skarabeusz_index = actual_skarabeusz_index;
@@ -204,7 +222,8 @@ public:
 
                         if (!connection_exists) {
                             if (!first_move) {
-                                connection_lines.push_back(Line(skarabeusze[actual_skarabeusz_index].position, skarabeusze[previous_skarabeusz_index].position));
+                                connection_lines.push_back(Line(skarabeusze[actual_skarabeusz_index].position, skarabeusze[previous_skarabeusz_index].position, mathy::colorRGBA::BLUE(), 16));
+                                connection_lines_light.push_back(Line(skarabeusze[actual_skarabeusz_index].position, skarabeusze[previous_skarabeusz_index].position, mathy::colorRGBA{ 75, 150, 225, 255 }, 8));
                             }
 
                             skarabeusze[i].state = confirmed;
@@ -256,7 +275,7 @@ public:
         }
 
         if (!can_move) {
-            std::cout << "CANT MOVE\n";
+            lost_image.enabled = true;
         }
 
         bool all_confirmed_or_selected = true;
@@ -299,6 +318,10 @@ public:
             line.render_line(renderer);
         }
 
+        for (auto& line : connection_lines_light) {
+            line.render_line(renderer);
+        }
+
         flap.render_texture();
 
         for (int i = 0; i < skarabeusze_size; i++) {
@@ -308,6 +331,8 @@ public:
         key.render_texture();
 
         sm_btn.render_texture();
+        restart_btn.render_texture();
+        lost_image.render_texture();
 
         SDL_RenderPresent(renderer);
     }
@@ -327,10 +352,13 @@ int main(int argc, char* args[]) {
 
     SDL_Window* window = SDL_CreateWindow("YUMESDL2", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
     SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+    Scene* currentScene;
 
-    Game gameScene(renderer, window);
-    Scene* currentScene = &gameScene;
-    currentScene->run();
+    while (!END) {
+        Game gameScene(renderer, window);
+        currentScene = &gameScene;
+        currentScene->run();
+    }
 
     Mix_CloseAudio();
     SDL_DestroyRenderer(renderer);
