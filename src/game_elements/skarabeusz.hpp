@@ -1,7 +1,6 @@
 #pragma once
 
-#include "config.h"
-#include "source/render/texture.hpp"
+#include "../config.h"
 
 enum State {
     empty,

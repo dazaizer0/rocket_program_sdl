@@ -1,7 +1,6 @@
 #pragma once
 
-#include "config.h"
-#include <SDL2/SDL.h>
+#include "../config.h"
 #include <cmath>
 
 class Line {
@@ -23,7 +22,7 @@ Line::Line(mathy::vec2<int> startv, mathy::vec2<int> endv)
 }
 
 void Line::render_line(SDL_Renderer* rend) {
-    int thickness = 10;
+    int thickness = 16;
     draw_thick_line(rend, start.x, start.y, end.x, end.y, thickness);
 }
 

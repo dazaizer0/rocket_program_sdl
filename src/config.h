@@ -17,3 +17,4 @@
 #include <string>
 
 #include "source/math/mathy.hpp"
+#include "source/render/texture.hpp"

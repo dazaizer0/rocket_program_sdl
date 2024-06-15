@@ -1,12 +1,9 @@
 #include "config.h"
+#include "game_elements/skarabeusz.hpp"
+#include "game_elements/connection.hpp"
 
-#include "source/render/texture.hpp"
-#include "skarabeusz.hpp"
-#include "connection.hpp"
-
-
-const int SCREEN_WIDTH{ 1024 };
-const int SCREEN_HEIGHT{ 768 };
+const int SCREEN_WIDTH = 1024;
+const int SCREEN_HEIGHT = 768;
 
 class Scene {
 protected:
@@ -16,12 +13,10 @@ protected:
 public:
     Scene(SDL_Renderer* rend) : renderer(rend), quit(false) {}
 
-    virtual void start() {};
-
-    virtual void handleEvents(SDL_Event& event) {};
-
-    virtual void update() {};
-    virtual void render() {};
+    virtual void start() {}
+    virtual void handleEvents(SDL_Event& event) {}
+    virtual void update() {}
+    virtual void render() {}
 
     void quitScene() {
         quit = true;
@@ -36,7 +31,6 @@ public:
                 handleEvents(event);
             }
             update();
-
             render();
         }
     }
@@ -47,52 +41,48 @@ public:
 class Game : public Scene {
 protected:
     mathy::vec2<int> mouse_pos = mathy::vec2<int>::ZERO();
-    bool mouse_left_down{ false };
-    Uint8 mouse_state{};
+    bool mouse_left_down = false;
+    Uint8 mouse_state = 0;
+    bool first_move = true;
 
-    bool first_move{ true };
-
-    render::texture bg = render::texture("res/bg.png", mathy::vec2<int>{512, 384}, mathy::vec2<int>{1024, 768}, 0.0f, renderer);
-
-    render::texture flap = render::texture("res/x.png", mathy::vec2<int>{512, 384}, mathy::vec2<int>{1024, 1024}, 0.0f, renderer);
+    render::texture bg = render::texture("res/bg.png", { 512, 384 }, { 1024, 768 }, 0.0f, renderer);
+    render::texture flap = render::texture("res/x.png", { 512, 384 }, { 1024, 1024 }, 0.0f, renderer);
 
     Skarabeusz skarabeusze[25] = {
-        Skarabeusz(renderer, mathy::vec2<int>{198, 168}, mathy::vec2<int>{80, 95}, 0.0f),
-        Skarabeusz(renderer, mathy::vec2<int>{334, 168}, mathy::vec2<int>{80, 95}, 0.0f),
-        Skarabeusz(renderer, mathy::vec2<int>{511, 130}, mathy::vec2<int>{80, 95}, 0.0f),
-        Skarabeusz(renderer, mathy::vec2<int>{690, 166}, mathy::vec2<int>{80, 95}, 0.0f),
-        Skarabeusz(renderer, mathy::vec2<int>{130, 246}, mathy::vec2<int>{80, 95}, 0.0f),
-        Skarabeusz(renderer, mathy::vec2<int>{265, 243}, mathy::vec2<int>{80, 95}, 0.0f),
-        Skarabeusz(renderer, mathy::vec2<int>{410, 248}, mathy::vec2<int>{80, 95}, 0.0f),
-        Skarabeusz(renderer, mathy::vec2<int>{510, 235}, mathy::vec2<int>{80, 95}, 0.0f),
-        Skarabeusz(renderer, mathy::vec2<int>{614, 248}, mathy::vec2<int>{80, 95}, 0.0f),
-        Skarabeusz(renderer, mathy::vec2<int>{758, 248}, mathy::vec2<int>{80, 95}, 0.0f),
-        Skarabeusz(renderer, mathy::vec2<int>{245, 393}, mathy::vec2<int>{80, 95}, 0.0f),
-        Skarabeusz(renderer, mathy::vec2<int>{440, 394}, mathy::vec2<int>{80, 95}, 0.0f),
-        Skarabeusz(renderer, mathy::vec2<int>{509, 330}, mathy::vec2<int>{80, 95}, 0.0f),
-        Skarabeusz(renderer, mathy::vec2<int>{582, 398}, mathy::vec2<int>{80, 95}, 0.0f),
-        Skarabeusz(renderer, mathy::vec2<int>{782, 393}, mathy::vec2<int>{80, 95}, 0.0f),
-        Skarabeusz(renderer, mathy::vec2<int>{275, 565}, mathy::vec2<int>{80, 95}, 0.0f),
-        Skarabeusz(renderer, mathy::vec2<int>{414, 562}, mathy::vec2<int>{80, 95}, 0.0f),
-        Skarabeusz(renderer, mathy::vec2<int>{509, 486}, mathy::vec2<int>{80, 95}, 0.0f),
-        Skarabeusz(renderer, mathy::vec2<int>{513, 613}, mathy::vec2<int>{80, 95}, 0.0f),
-        Skarabeusz(renderer, mathy::vec2<int>{612, 557}, mathy::vec2<int>{80, 95}, 0.0f),
-        Skarabeusz(renderer, mathy::vec2<int>{749, 562}, mathy::vec2<int>{80, 95}, 0.0f),
-        Skarabeusz(renderer, mathy::vec2<int>{880, 566}, mathy::vec2<int>{80, 95}, 0.0f),
-        Skarabeusz(renderer, mathy::vec2<int>{341, 642}, mathy::vec2<int>{80, 95}, 0.0f),
-        Skarabeusz(renderer, mathy::vec2<int>{682, 636}, mathy::vec2<int>{80, 95}, 0.0f),
-        Skarabeusz(renderer, mathy::vec2<int>{824, 642}, mathy::vec2<int>{80, 95}, 0.0f)
+        Skarabeusz(renderer, {198, 168}, {80, 95}, 0.0f),
+        Skarabeusz(renderer, {334, 168}, {80, 95}, 0.0f),
+        Skarabeusz(renderer, {511, 130}, {80, 95}, 0.0f),
+        Skarabeusz(renderer, {690, 166}, {80, 95}, 0.0f),
+        Skarabeusz(renderer, {130, 246}, {80, 95}, 0.0f),
+        Skarabeusz(renderer, {265, 243}, {80, 95}, 0.0f),
+        Skarabeusz(renderer, {410, 248}, {80, 95}, 0.0f),
+        Skarabeusz(renderer, {510, 235}, {80, 95}, 0.0f),
+        Skarabeusz(renderer, {614, 248}, {80, 95}, 0.0f),
+        Skarabeusz(renderer, {758, 248}, {80, 95}, 0.0f),
+        Skarabeusz(renderer, {245, 393}, {80, 95}, 0.0f),
+        Skarabeusz(renderer, {440, 394}, {80, 95}, 0.0f),
+        Skarabeusz(renderer, {509, 330}, {80, 95}, 0.0f),
+        Skarabeusz(renderer, {582, 398}, {80, 95}, 0.0f),
+        Skarabeusz(renderer, {782, 393}, {80, 95}, 0.0f),
+        Skarabeusz(renderer, {275, 565}, {80, 95}, 0.0f),
+        Skarabeusz(renderer, {414, 562}, {80, 95}, 0.0f),
+        Skarabeusz(renderer, {509, 486}, {80, 95}, 0.0f),
+        Skarabeusz(renderer, {513, 613}, {80, 95}, 0.0f),
+        Skarabeusz(renderer, {612, 557}, {80, 95}, 0.0f),
+        Skarabeusz(renderer, {749, 562}, {80, 95}, 0.0f),
+        Skarabeusz(renderer, {880, 566}, {80, 95}, 0.0f),
+        Skarabeusz(renderer, {341, 642}, {80, 95}, 0.0f),
+        Skarabeusz(renderer, {682, 636}, {80, 95}, 0.0f),
+        Skarabeusz(renderer, {824, 642}, {80, 95}, 0.0f)
     };
 
-    size_t skarabeusze_size{ sizeof(skarabeusze) / sizeof(skarabeusze[0]) };
-
+    size_t skarabeusze_size = sizeof(skarabeusze) / sizeof(skarabeusze[0]);
     std::vector<Line> connection_lines;
-
-    int actual_skarabeusz_index{};
-    int previous_skarabeusz_index{25};
-
+    int actual_skarabeusz_index = 0;
+    int previous_skarabeusz_index = 25;
     std::vector<std::string> connections;
-    bool can_move{ true };
+    bool can_move = true;
+    bool finished = false;
 
 public:
     Game(SDL_Renderer* rend) : Scene(rend) {}
@@ -108,7 +98,7 @@ public:
         skarabeusze[5].neighbours_indexes = { 0, 1, 4, 6, 10 };
         skarabeusze[6].neighbours_indexes = { 1, 2, 7, 11, 10, 5 };
         skarabeusze[7].neighbours_indexes = { 6, 8 };
-        skarabeusze[8].neighbours_indexes = { 2, 3, 7, 9, 13 };
+        skarabeusze[8].neighbours_indexes = { 2, 3, 7, 9, 13, 14 };
         skarabeusze[9].neighbours_indexes = { 3, 8, 14 };
         skarabeusze[10].neighbours_indexes = { 5, 6, 11, 15 };
         skarabeusze[11].neighbours_indexes = { 10, 6, 12, 17, 16, 15 };
@@ -124,7 +114,7 @@ public:
         skarabeusze[21].neighbours_indexes = { 20, 24 };
         skarabeusze[22].neighbours_indexes = { 15, 16 };
         skarabeusze[23].neighbours_indexes = { 19, 20 };
-        skarabeusze[24].neighbours_indexes = { 20, 21};
+        skarabeusze[24].neighbours_indexes = { 20, 21 };
 
         for (int i = 0; i < skarabeusze_size; i++) {
             skarabeusze[i].state = selected;
@@ -153,82 +143,98 @@ public:
 
     virtual void update() override {
         mouse_state = SDL_GetMouseState(&mouse_pos.x, &mouse_pos.y);
+        can_move = false;
 
         for (int i = 0; i < skarabeusze_size; i++) {
             if (mathy::distance(mouse_pos, skarabeusze[i].position) < ((skarabeusze[i].size.x + skarabeusze[i].size.y) / 8) && mouse_state && mouse_left_down) {
                 if (skarabeusze[i].can_select || first_move) {
                     if (i != previous_skarabeusz_index) {
                         int temp_actual_skarabeusz_index = actual_skarabeusz_index;
-                        int temp_previos_skarabeusz_index = previous_skarabeusz_index;
+                        int temp_previous_skarabeusz_index = previous_skarabeusz_index;
                         previous_skarabeusz_index = actual_skarabeusz_index;
                         actual_skarabeusz_index = i;
-                        std::string actual_connection1 = std::to_string(previous_skarabeusz_index) + "" + std::to_string(actual_skarabeusz_index);
-                        std::string actual_connection2 = std::to_string(actual_skarabeusz_index) + "" + std::to_string(previous_skarabeusz_index);
-                        for (int c = 0; c < connections.size(); c++) {
-                            if (actual_connection1 == connections[c] || actual_connection2 == connections[c]) {
-                                actual_skarabeusz_index = temp_actual_skarabeusz_index;
-                                previous_skarabeusz_index = temp_previos_skarabeusz_index;
+                        std::string actual_connection1 = std::to_string(previous_skarabeusz_index) + std::to_string(actual_skarabeusz_index);
+                        std::string actual_connection2 = std::to_string(actual_skarabeusz_index) + std::to_string(previous_skarabeusz_index);
+
+                        bool connection_exists = false;
+                        for (const auto& connection : connections) {
+                            if (actual_connection1 == connection || actual_connection2 == connection) {
+                                connection_exists = true;
                                 break;
                             }
                         }
 
-                        if (!first_move)
-                            connection_lines.push_back(Line(skarabeusze[actual_skarabeusz_index].position, skarabeusze[previous_skarabeusz_index].position));
-
-                        skarabeusze[i].state = confirmed;
-                        std::cout << "actual: " << i << "\n previos: " << previous_skarabeusz_index << '\n';
-                        std::cout << "actual connection: " << actual_connection1 << " AND: " << actual_connection2 << '\n';
-                        first_move = false;
-                        skarabeusze[i].was_confirmed = true;
-                        connections.push_back(actual_connection1);
-                        connections.push_back(actual_connection2);
-
-                        for (int j = 0; j < skarabeusze_size; j++) {
-                            skarabeusze[j].can_select = false;
-                            if (!skarabeusze[j].was_confirmed) {
-                                skarabeusze[j].state = empty;
+                        if (!connection_exists) {
+                            if (!first_move) {
+                                connection_lines.push_back(Line(skarabeusze[actual_skarabeusz_index].position, skarabeusze[previous_skarabeusz_index].position));
                             }
-                            else {
-                                skarabeusze[j].state = confirmed;
+
+                            skarabeusze[i].state = confirmed;
+                            first_move = false;
+                            skarabeusze[i].was_confirmed = true;
+                            connections.push_back(actual_connection1);
+                            connections.push_back(actual_connection2);
+
+                            for (int j = 0; j < skarabeusze_size; j++) {
+                                skarabeusze[j].can_select = false;
+                                if (!skarabeusze[j].was_confirmed) {
+                                    skarabeusze[j].state = empty;
+                                }
+                                else {
+                                    skarabeusze[j].state = confirmed;
+                                }
                             }
                         }
-
-                        for (int v = 0; v < connections.size(); v++) {
-                            std::cout << "connection nr." << v << ": " << connections[v] << '\n';
+                        else {
+                            actual_skarabeusz_index = temp_actual_skarabeusz_index;
+                            previous_skarabeusz_index = temp_previous_skarabeusz_index;
                         }
                     }
                 }
             }
         }
 
-        for (int i = 0; i < skarabeusze[actual_skarabeusz_index].neighbours_indexes.size(); i++) {
-            if (!first_move) {
-                skarabeusze[skarabeusze[actual_skarabeusz_index].neighbours_indexes[i]].can_select = true;
-                if (skarabeusze[actual_skarabeusz_index].neighbours_indexes[i] != previous_skarabeusz_index)
-                    skarabeusze[skarabeusze[actual_skarabeusz_index].neighbours_indexes[i]].state = selected;
+        for (const auto& actual_neighbour_index : skarabeusze[actual_skarabeusz_index].neighbours_indexes) {
+            std::string actual_connection1 = std::to_string(actual_neighbour_index) + std::to_string(actual_skarabeusz_index);
+            std::string actual_connection2 = std::to_string(actual_skarabeusz_index) + std::to_string(actual_neighbour_index);
+
+            bool connection_exists = false;
+            for (const auto& connection : connections) {
+                if (connection == actual_connection1 || connection == actual_connection2) {
+                    connection_exists = true;
+                    break;
+                }
+            }
+
+            if (!connection_exists) {
+                if (actual_neighbour_index != previous_skarabeusz_index) {
+                    skarabeusze[actual_neighbour_index].state = selected;
+                    skarabeusze[actual_neighbour_index].can_select = true;
+                    can_move = true;
+                }
             }
         }
 
-        // CHECK IF PLAYER CAN MOVE
+        if (!can_move) {
+            std::cout << "CANT MOVE\n";
+        }
 
-        //if (mouse_left_down)
-        //    std::cout << "x: " << mouse_pos.x << " y : " << mouse_pos.y << '\n';
-
-        // TODO: PO£¥CZENIA 
-
-        /*bool all_confirmed = true;
-
-        for (const auto& skarabeusz : skarabeusze) {
-            if (skarabeusz.state != empty) {
-                all_confirmed = false;
+        bool all_confirmed_or_selected = true;
+        for (int i = 0; i < skarabeusze_size; i++) {
+            if (skarabeusze[i].state != confirmed && skarabeusze[i].state != selected) {
+                all_confirmed_or_selected = false;
                 break;
             }
         }
 
-        if (all_confirmed) {
-            flap.enabled = true;
-            skarabeusze[12].enabled = false;
-        }*/
+        if (all_confirmed_or_selected && !first_move) {
+            finished = true;
+            std::cout << "FINISH\n";
+        }
+
+        if (finished) {
+            std::cout << "FINISH\n";
+        }
     }
 
     virtual void render() override {
@@ -238,8 +244,8 @@ public:
         bg.render_texture();
         flap.render_texture();
 
-        for (int i = 0; i < connection_lines.size(); i++) {
-            connection_lines[i].render_line(renderer);
+        for (auto& line : connection_lines) {
+            line.render_line(renderer);
         }
 
         for (int i = 0; i < skarabeusze_size; i++) {
@@ -257,7 +263,6 @@ int main(int argc, char* args[]) {
     SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 
     Game gameScene(renderer);
-
     Scene* currentScene = &gameScene;
     currentScene->run();
 
