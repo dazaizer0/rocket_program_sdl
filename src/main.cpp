@@ -75,12 +75,14 @@ protected:
         Skarabeusz(renderer, {682, 636}, {80, 95}, 0.0f),
         Skarabeusz(renderer, {824, 642}, {80, 95}, 0.0f)
     };
-
     size_t skarabeusze_size = sizeof(skarabeusze) / sizeof(skarabeusze[0]);
+
     std::vector<Line> connection_lines;
+    std::vector<std::string> connections;
+
     int actual_skarabeusz_index = 0;
     int previous_skarabeusz_index = 25;
-    std::vector<std::string> connections;
+
     bool can_move = true;
     bool finished = false;
 
@@ -234,6 +236,8 @@ public:
 
         if (finished) {
             std::cout << "FINISH\n";
+            flap.enabled = true;
+            skarabeusze[12].enabled = false;
         }
     }
 
@@ -242,11 +246,12 @@ public:
         SDL_RenderClear(renderer);
 
         bg.render_texture();
-        flap.render_texture();
 
         for (auto& line : connection_lines) {
             line.render_line(renderer);
         }
+
+        flap.render_texture();
 
         for (int i = 0; i < skarabeusze_size; i++) {
             skarabeusze[i].render();
