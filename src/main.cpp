@@ -57,7 +57,7 @@ protected:
     render::texture restart_btn = render::texture("res/restart_btn.png", { 270, 730 }, { 150, 40 }, 0.0f, renderer);
     render::texture lost_image = render::texture("res/lost_image.png", { 512, 384 }, { 550, 150 }, 0.0f, renderer);
 
-    Skarabeusz skarabeusze[25] = {
+    Skarabeusz skarabeusze[26] = {
         Skarabeusz(renderer, {198, 168}, {80, 95}, 0.0f),
         Skarabeusz(renderer, {334, 168}, {80, 95}, 0.0f),
         Skarabeusz(renderer, {511, 130}, {80, 95}, 0.0f),
@@ -82,7 +82,8 @@ protected:
         Skarabeusz(renderer, {880, 566}, {80, 95}, 0.0f),
         Skarabeusz(renderer, {341, 642}, {80, 95}, 0.0f),
         Skarabeusz(renderer, {682, 636}, {80, 95}, 0.0f),
-        Skarabeusz(renderer, {824, 642}, {80, 95}, 0.0f)
+        Skarabeusz(renderer, {824, 642}, {80, 95}, 0.0f),
+        Skarabeusz(renderer, {2000, 2000}, {1, 1}, 0.0f) // tester
     };
     size_t skarabeusze_size = sizeof(skarabeusze) / sizeof(skarabeusze[0]);
 
@@ -90,8 +91,9 @@ protected:
     std::vector<Line> connection_lines_light;
     std::vector<std::string> connections;
 
-    int actual_skarabeusz_index = 0;
-    int previous_skarabeusz_index = 123;
+    int actual_skarabeusz_index = 25;
+    int previous_skarabeusz_index = 25;
+    int move_nr = 0;
 
     bool can_move = true;
     bool finished = false;
@@ -180,7 +182,7 @@ public:
         mouse_state = SDL_GetMouseState(&mouse_pos.x, &mouse_pos.y);
         can_move = false;
 
-        if (mathy::distance(mouse_pos, sm_btn.position) < ((sm_btn.size.x + sm_btn.size.y) / 6) && mouse_state && mouse_left_down) {
+        if (mathy::distance(mouse_pos, sm_btn.position) < ((sm_btn.size.x + sm_btn.size.y) / 5) && mouse_state && mouse_left_down) {
             if (!fullscreen) {
                 SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN);
                 fullscreen = true;
@@ -191,14 +193,8 @@ public:
             }
         }
 
-        if (mathy::distance(mouse_pos, restart_btn.position) < ((restart_btn.size.x + restart_btn.size.y) / 6) && mouse_state && mouse_left_down) {
-            if (mathy::distance(restart_btn.position, key.position) < 100) {
-                END = true;
-                quitScene();
-            }
-            else {
-                quitScene();
-            }
+        if (mathy::distance(mouse_pos, restart_btn.position) < ((restart_btn.size.x + restart_btn.size.y) / 5) && mouse_state && mouse_left_down) {
+            quitScene();
         }
 
         if (mathy::distance(mouse_pos, key.position) < ((key.size.x + key.size.y) / 5) && mouse_state && mouse_left_down && finished) {
@@ -253,6 +249,8 @@ public:
                             previous_skarabeusz_index = temp_previous_skarabeusz_index;
                         }
 
+                        move_nr += 1;
+                        std::cout << "move: " << move_nr << '\n';
                         Mix_PlayChannel(1, put_sound, 0);
                     }
                 }
@@ -280,7 +278,7 @@ public:
             }
         }
 
-        if (!can_move) {
+        if (!can_move && !first_move) {
             lost_image.enabled = true;
         }
 
