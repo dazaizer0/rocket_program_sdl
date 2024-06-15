@@ -53,9 +53,9 @@ protected:
     render::texture flap = render::texture("res/x.png", { 512, 384 }, { 1024, 1024 }, 0.0f, renderer);
     render::texture key = render::texture("res/key.png", { 512, 384 }, { 200, 100 }, 0.0f, renderer);
 
-    render::texture sm_btn = render::texture("res/sm_btn.png", { 100, 720 }, { 150, 55 }, 0.0f, renderer);
-    render::texture restart_btn = render::texture("res/restart_btn.png", { 270, 720 }, { 150, 55 }, 0.0f, renderer);
-    render::texture lost_image = render::texture("res/lost_image.png", { 512, 384 }, { 550, 200 }, 0.0f, renderer);
+    render::texture sm_btn = render::texture("res/sm_btn.png", { 100, 730 }, { 150, 40 }, 0.0f, renderer);
+    render::texture restart_btn = render::texture("res/restart_btn.png", { 270, 730 }, { 150, 40 }, 0.0f, renderer);
+    render::texture lost_image = render::texture("res/lost_image.png", { 512, 384 }, { 550, 150 }, 0.0f, renderer);
 
     Skarabeusz skarabeusze[25] = {
         Skarabeusz(renderer, {198, 168}, {80, 95}, 0.0f),
@@ -91,7 +91,7 @@ protected:
     std::vector<std::string> connections;
 
     int actual_skarabeusz_index = 0;
-    int previous_skarabeusz_index = 25;
+    int previous_skarabeusz_index = 123;
 
     bool can_move = true;
     bool finished = false;
@@ -180,7 +180,7 @@ public:
         mouse_state = SDL_GetMouseState(&mouse_pos.x, &mouse_pos.y);
         can_move = false;
 
-        if (mathy::distance(mouse_pos, sm_btn.position) < ((sm_btn.size.x + sm_btn.size.y) / 2) && mouse_state && mouse_left_down) {
+        if (mathy::distance(mouse_pos, sm_btn.position) < ((sm_btn.size.x + sm_btn.size.y) / 6) && mouse_state && mouse_left_down) {
             if (!fullscreen) {
                 SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN);
                 fullscreen = true;
@@ -191,11 +191,17 @@ public:
             }
         }
 
-        if (mathy::distance(mouse_pos, restart_btn.position) < ((restart_btn.size.x + restart_btn.size.y) / 2) && mouse_state && mouse_left_down) {
-            quitScene();
+        if (mathy::distance(mouse_pos, restart_btn.position) < ((restart_btn.size.x + restart_btn.size.y) / 6) && mouse_state && mouse_left_down) {
+            if (mathy::distance(restart_btn.position, key.position) < 100) {
+                END = true;
+                quitScene();
+            }
+            else {
+                quitScene();
+            }
         }
 
-        if (mathy::distance(mouse_pos, key.position) < ((key.size.x + key.size.y) / 2) && mouse_state && mouse_left_down && finished) {
+        if (mathy::distance(mouse_pos, key.position) < ((key.size.x + key.size.y) / 5) && mouse_state && mouse_left_down && finished) {
             key.position = mouse_pos;
             key.update_destination_rect();
             key_collected = true;
@@ -328,10 +334,9 @@ public:
             skarabeusze[i].render();
         }
 
-        key.render_texture();
-
-        sm_btn.render_texture();
         restart_btn.render_texture();
+        key.render_texture();
+        sm_btn.render_texture();
         lost_image.render_texture();
 
         SDL_RenderPresent(renderer);
@@ -350,7 +355,7 @@ int main(int argc, char* args[]) {
         return 1;
     }
 
-    SDL_Window* window = SDL_CreateWindow("YUMESDL2", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
+    SDL_Window* window = SDL_CreateWindow("Saqqarah: The Pyramid of Puzzles", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
     SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
     Scene* currentScene;
 
