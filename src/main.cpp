@@ -8,10 +8,12 @@ const int SCREEN_HEIGHT = 768;
 class Scene {
 protected:
     SDL_Renderer* renderer;
+    SDL_Window* window;
+    bool fullscreen;
     bool quit;
 
 public:
-    Scene(SDL_Renderer* rend) : renderer(rend), quit(false) {}
+    Scene(SDL_Renderer* rend, SDL_Window* win) : renderer(rend), window(win), quit(false) {}
 
     virtual void start() {}
     virtual void handleEvents(SDL_Event& event) {}
@@ -19,6 +21,7 @@ public:
     virtual void render() {}
 
     void quitScene() {
+        fullscreen = false;
         quit = true;
     }
 
@@ -48,6 +51,8 @@ protected:
     render::texture bg = render::texture("res/bg.png", { 512, 384 }, { 1024, 768 }, 0.0f, renderer);
     render::texture flap = render::texture("res/x.png", { 512, 384 }, { 1024, 1024 }, 0.0f, renderer);
     render::texture key = render::texture("res/key.png", { 512, 384 }, { 200, 100 }, 0.0f, renderer);
+
+    render::texture sm_btn = render::texture("res/sm_btn.png", { 200, 700 }, { 200, 75 }, 0.0f, renderer);
 
     Skarabeusz skarabeusze[25] = {
         Skarabeusz(renderer, {198, 168}, {80, 95}, 0.0f),
@@ -92,7 +97,7 @@ protected:
     Mix_Chunk* finish_sound;
     bool finish_played = false;
 public:
-    Game(SDL_Renderer* rend) : Scene(rend) {}
+    Game(SDL_Renderer* rend, SDL_Window* wind) : Scene(rend, wind) {}
 
     virtual void start() override {
         music = Mix_LoadMUS("res/retro-egyptian.mp3");
@@ -166,6 +171,17 @@ public:
     virtual void update() override {
         mouse_state = SDL_GetMouseState(&mouse_pos.x, &mouse_pos.y);
         can_move = false;
+
+        if (mathy::distance(mouse_pos, sm_btn.position) < ((sm_btn.size.x + sm_btn.size.y) / 8) && mouse_state && mouse_left_down) {
+            if (!fullscreen) {
+                SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN);
+                fullscreen = true;
+            }
+            else {
+                SDL_SetWindowFullscreen(window, 0);
+                fullscreen = false;
+            }
+        }
 
         for (int i = 0; i < skarabeusze_size; i++) {
             if (mathy::distance(mouse_pos, skarabeusze[i].position) < ((skarabeusze[i].size.x + skarabeusze[i].size.y) / 8) && mouse_state && mouse_left_down) {
@@ -291,6 +307,8 @@ public:
 
         key.render_texture();
 
+        sm_btn.render_texture();
+
         SDL_RenderPresent(renderer);
     }
 };
@@ -310,7 +328,7 @@ int main(int argc, char* args[]) {
     SDL_Window* window = SDL_CreateWindow("YUMESDL2", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
     SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 
-    Game gameScene(renderer);
+    Game gameScene(renderer, window);
     Scene* currentScene = &gameScene;
     currentScene->run();
 
