@@ -48,7 +48,7 @@ namespace render {
         }
 
         sdl_texture = SDL_CreateTextureFromSurface(renderer, surface);
-        if (sdl_texture == nullptr) { // creating texture on surface
+        if (sdl_texture == nullptr) {
             std::cerr << "SDL_CreateTextureFromSurface: Failed to create texture: " << SDL_GetError() << std::endl;
         }
         else {

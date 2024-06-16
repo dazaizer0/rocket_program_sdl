@@ -34,7 +34,9 @@ public:
             while (SDL_PollEvent(&event)) {
                 handleEvents(event);
             }
+
             update();
+            
             render();
         }
     }
@@ -44,11 +46,6 @@ public:
 
 class Game : public Scene {
 protected:
-    mathy::vec2<int> mouse_pos = mathy::vec2<int>::ZERO();
-    bool mouse_left_down = false;
-    Uint8 mouse_state = 0;
-    bool first_move = true;
-
     render::texture bg = render::texture("res/bg.png", { 512, 384 }, { 1024, 768 }, 0.0f, renderer);
     render::texture flap = render::texture("res/x.png", { 512, 384 }, { 1024, 1024 }, 0.0f, renderer);
     render::texture key = render::texture("res/key.png", { 512, 384 }, { 200, 100 }, 0.0f, renderer);
@@ -91,10 +88,15 @@ protected:
     std::vector<Line> connection_lines_light;
     std::vector<std::string> connections;
 
+    mathy::vec2<int> mouse_pos = mathy::vec2<int>::ZERO();
+
     int actual_skarabeusz_index = 25;
     int previous_skarabeusz_index = 25;
+    Uint8 mouse_state = 0;
     int move_nr = 0;
 
+    bool first_move = true;
+    bool mouse_left_down = false;
     bool can_move = true;
     bool finished = false;
     bool key_collected = false;
@@ -206,7 +208,7 @@ public:
         for (int i = 0; i < skarabeusze_size; i++) {
             if (mathy::distance(mouse_pos, skarabeusze[i].position) < ((skarabeusze[i].size.x + skarabeusze[i].size.y) / 8) && mouse_state && mouse_left_down && !key_collected) {
                 if (skarabeusze[i].can_select || first_move) {
-                    if (i != previous_skarabeusz_index) {
+                    if (i != previous_skarabeusz_index && !finished) {
                         int temp_actual_skarabeusz_index = actual_skarabeusz_index;
                         int temp_previous_skarabeusz_index = previous_skarabeusz_index;
                         previous_skarabeusz_index = actual_skarabeusz_index;
@@ -283,7 +285,7 @@ public:
         }
 
         bool all_confirmed_or_selected = true;
-        for (int i = 0; i < skarabeusze_size; i++) {
+        for (int i = 0; i < skarabeusze_size - 1; i++) {
             if (skarabeusze[i].state != confirmed && skarabeusze[i].state != selected) {
                 all_confirmed_or_selected = false;
                 break;
