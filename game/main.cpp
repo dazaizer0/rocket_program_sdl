@@ -18,7 +18,7 @@ public:
     }
 
     virtual void render() override {
-        SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
+        SDL_SetRenderDrawColor(renderer, 72, 64, 46, 255);
         SDL_RenderClear(renderer);
 
         SDL_RenderPresent(renderer);

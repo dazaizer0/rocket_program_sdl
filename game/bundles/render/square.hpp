@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../../config.h"
+#include "../../config.hpp"
 
 namespace render {
     class square {

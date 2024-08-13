@@ -1,7 +1,7 @@
 #ifndef YUMESDL_MATH_HPP
 #define YUMESDL_MATH_HPP
 
-#include "../../config.h"
+#include "../../config.hpp"
 
 namespace mathy {
     // VECTOR 2

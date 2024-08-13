@@ -1,7 +1,7 @@
 #ifndef YUMESDL_TEXTURE_HPP
 #define YUMESDL_TEXTURE_HPP
 
-#include "../../config.h"
+#include "../../config.hpp"
 #include "square.hpp"
 
 namespace render {
