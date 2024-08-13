@@ -1,4 +1,5 @@
-#pragma once
+#ifndef YUMESDL_TEXTURE_HPP
+#define YUMESDL_TEXTURE_HPP
 
 #include "../../config.h"
 #include "square.hpp"
@@ -79,3 +80,5 @@ namespace render {
         std::cerr << "texture destroyed successfully: " << texture_path << std::endl;
     }
 }
+
+#endif

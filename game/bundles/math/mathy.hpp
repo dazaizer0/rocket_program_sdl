@@ -1,4 +1,5 @@
-#pragma once
+#ifndef YUMESDL_MATH_HPP
+#define YUMESDL_MATH_HPP
 
 #include "../../config.h"
 
@@ -118,3 +119,5 @@ namespace mathy {
 
     // VECTOR 3 FUNCTIONS
 }
+
+#endif

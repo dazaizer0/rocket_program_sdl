@@ -26,25 +26,20 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(SDL_mixer)
 
+
 add_executable(${PROJECT_NAME}
-        src/main.cpp
-        src/config.h
-        src/game_elements/skarabeusz.hpp
-        src/game_elements/connection.hpp
-        src/source/math/mathy.hpp
-        src/source/render/square.hpp
-        src/source/render/texture.hpp
+        game/main.cpp
+        game/config.hpp
+        game/bundles/math/mathy.hpp
+        game/bundles/render/square.hpp
+        game/bundles/render/texture.hpp
 )
 
 
 target_link_libraries(${PROJECT_NAME}
-        PRIVATE
-        SDL2::SDL2
-        SDL2_image
-        SDL2_mixer
-)
-
-target_include_directories(${PROJECT_NAME}
-        PRIVATE
-        ${SDL2_INCLUDE_DIRS}
+    PRIVATE
+    SDL2::SDL2
+    SDL2::SDL2main
+    SDL2_image
+    SDL2_mixer
 )
