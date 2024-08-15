@@ -1,4 +1,5 @@
-#pragma once
+#ifndef YUMESDL_SQUARE_HPP
+#define YUMESDL_SQUARE_HPP
 
 #include "../../config.hpp"
 
@@ -50,3 +51,5 @@ namespace render {
         SDL_RenderFillRect(renderer, &squareRect);
     }
 }
+
+#endif

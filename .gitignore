@@ -373,3 +373,9 @@ FodyWeavers.xsd
 
 # libs
 glm
+glfw
+.vs
+.vsc
+.idea
+
+cmake-build-release
