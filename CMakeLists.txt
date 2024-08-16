@@ -3,6 +3,8 @@ project(yumesdl)
 
 set(CMAKE_CXX_STANDARD 20)
 
+add_subdirectory(glm)
+
 if (WIN32)
     include(FetchContent)
     FetchContent_Declare(
@@ -38,11 +40,10 @@ else()
 endif()
 
 add_executable(${PROJECT_NAME}
-    game/main.cpp
-    game/config.hpp
-    game/bundles/math/mathy.hpp
-    game/bundles/render/square.hpp
-    game/bundles/render/texture.hpp
+    program/main.cpp
+
+    program/packages/core/scene.cpp
+    program/packages/core/scene.hpp
 )
 
 if (WIN32)
