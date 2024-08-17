@@ -3,4 +3,6 @@
 .vs
 
 out
+build
+
 glm
