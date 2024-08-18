@@ -3,8 +3,6 @@ project(yumesdl)
 
 set(CMAKE_CXX_STANDARD 20)
 
-add_subdirectory(glm)
-
 if (WIN32)
     include(FetchContent)
     FetchContent_Declare(
@@ -42,8 +40,7 @@ endif()
 add_executable(${PROJECT_NAME}
     program/main.cpp
 
-    program/packages/core/scene.cpp
-    program/packages/core/scene.hpp
+    program/packages/math/math.hpp
 )
 
 if (WIN32)
