@@ -31,8 +31,9 @@ SDL_Texture* LoadTexture(const char* file, SDL_Renderer* ren) {
 class Rocket {
 private:
     const float max_thrust = 14.0;
+    const float air_resistance_factor = 0.98f;
     bool engine_enable = true;
-    bool grounded;
+    bool grounded{};
 
 public:
     yume::vec2<float> position;
@@ -43,9 +44,10 @@ public:
     float thrust;
     float gravity;
     float thrustPower;
+    float rotationalVelocity;
 
     Rocket(yume::vec2<float> position_v, yume::vec2<float> size_v, SDL_Renderer* renderer)
-        : position(position_v), size(size_v), velocity(yume::vec2<float>(0, 0)), rotation(90), thrust(0), gravity(9.81), thrustPower(1.0) {
+        : position(position_v), size(size_v), velocity(yume::vec2<float>(0, 0)), rotation(90), thrust(0), gravity(9.81), thrustPower(1.0), rotationalVelocity(0.0f) {
         rocketTexture = LoadTexture("rocket.png", renderer);
     }
 
@@ -60,6 +62,9 @@ public:
 
         position = position + velocity * deltaTime;
 
+        rotationalVelocity = rotationalVelocity * air_resistance_factor;
+        rotation = rotation + rotationalVelocity * deltaTime;
+
         if (position.y > 600 - size.y) {
             position.y = 600 - size.y;
             velocity = yume::vec2<float>::ZERO();
@@ -68,8 +73,24 @@ public:
         else {
             grounded = false;
         }
-    }
 
+        if (grounded) {
+            if (rotation > 105 && rotation < 180) {
+                rotationalVelocity += 0.6f;
+            }
+            else if (rotation < 75 && rotation > 0) {
+                rotationalVelocity -= 0.6f;
+            }
+            else if (rotation >= 75 && rotation <= 105) {
+                if (rotation > 90) {
+                    rotationalVelocity -= 0.2f;
+                }
+                else if (rotation < 90) {
+                    rotationalVelocity += 0.2f;
+                }
+            }
+        }
+    }
 
     void render(SDL_Renderer* renderer) {
         SDL_Rect rocketRect = { (int)position.x, (int)position.y, (int)size.x, (int)size.y };
@@ -78,25 +99,25 @@ public:
 
     void increaseThrust() {
         if (thrust < max_thrust) {
-            thrust += 0.065f;
+            thrust += 0.073f;
         }
     }
 
     void decreaseThrust() {
         if (thrust > 0) {
-            thrust -= 0.065f;
+            thrust -= 0.085f;
         }
     }
 
     void rotateLeft() {
         if (!grounded) {
-            rotation -= 3.6f;
+            rotationalVelocity -= 3.6f;
         }
     }
 
     void rotateRight() {
         if (!grounded) {
-            rotation += 3.6f;
+            rotationalVelocity += 3.6f;
         }
     }
 
@@ -112,14 +133,16 @@ public:
     }
 
     void printLog() {
-        std::cout << "Rocket's Stats: \n";
+        std::cout << "\n-> Rocket's Stats: \n";
         std::cout << "> Velocity: x: " << velocity.x << ", y: " << velocity.y << '\n';
         std::cout << "> Actual Position: x:" << position.x << ", y: " << position.y << '\n';
         std::cout << "> Thrust: " << thrust << '\n';
         std::cout << "> Rotation: " << rotation << '\n';
+        std::cout << "> Rotational Velocity: " << rotationalVelocity << '\n';
         std::cout << "> Engine: " << engine_enable << '\n';
     }
 };
+
 
 
 class Scene {
@@ -233,11 +256,11 @@ public:
 class Game : public Scene {
 protected:
     yume::vec2<int> mousePos{ yume::vec2<int>::ZERO() };
-    Uint32 lastTime;
+    Uint32 lastTime{};
 
-    Rocket* rocket = new Rocket(yume::vec2<float>{ 500, 500 }, yume::vec2<float>{ 32, 54 }, renderer);
+    Rocket* rocket = new Rocket(yume::vec2<float>{ 500, 500 }, yume::vec2<float>{ 32, 64 }, renderer);
 
-    float timer;
+    float timer{};
 
 public:
     Game(SDL_Renderer* rend, SDL_Window* wind, SceneManager* mgr)
@@ -287,7 +310,7 @@ public:
         rocket->update(deltaTime);
 
         timer += 1.0f * deltaTime;
-        if (timer >= 3.0f) {
+        if (timer >= 1.0f) {
             rocket->printLog();
             timer = 0.0f;
         }
