@@ -224,7 +224,7 @@ public:
     virtual void render() override {
         SDL_RenderClear(renderer);
 
-        SDL_SetRenderDrawColor(renderer, 100, 0, 0, 255);
+        SDL_SetRenderDrawColor(renderer, 15, 90, 45, 255);
 
         SDL_RenderPresent(renderer);
     }
@@ -235,7 +235,7 @@ protected:
     yume::vec2<int> mousePos{ yume::vec2<int>::ZERO() };
     Uint32 lastTime;
 
-    Rocket* rocket = new Rocket(yume::vec2<float>{ 500, 500 }, yume::vec2<float>{ 20, 50 }, renderer);
+    Rocket* rocket = new Rocket(yume::vec2<float>{ 500, 500 }, yume::vec2<float>{ 32, 54 }, renderer);
 
     float timer;
 
@@ -294,7 +294,7 @@ public:
     }
 
     virtual void render() override {
-        SDL_SetRenderDrawColor(renderer, 0, 100, 0, 255);
+        SDL_SetRenderDrawColor(renderer, 25, 10, 95, 255);
         SDL_RenderClear(renderer);
 
         rocket->render(renderer);
