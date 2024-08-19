@@ -1,3 +1,6 @@
+#ifndef YUME_MATH
+#define YUME_MATH
+
 #include <iostream>
 #include <cmath>
 
@@ -135,3 +138,5 @@ namespace yume {
     }
 
 }
+
+#endif

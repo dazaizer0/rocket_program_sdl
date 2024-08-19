@@ -1,19 +1,4 @@
-#define SDL_MAIN_HANDLED
-#include <SDL2/SDL.h>
-
-#if (WIN32)
-#include <SDL_image.h>
-#include <SDL_mixer.h>
-#else
-#include <SDL2/SDL_image.h>
-#include <SDL2/SDL_mixer.h>
-#endif
-
-#include <iostream>
-#include <vector>
-#include <memory>
-
-#include "packages/math/math.hpp"
+#include "config.hpp"
 
 class SceneManager;
 
@@ -99,13 +84,13 @@ public:
 
     void increaseThrust() {
         if (thrust < max_thrust) {
-            thrust += 0.073f;
+            thrust += 0.9f;
         }
     }
 
     void decreaseThrust() {
         if (thrust > 0) {
-            thrust -= 0.085f;
+            thrust -= 1.0f;
         }
     }
 
@@ -218,6 +203,10 @@ public:
 class Menu : public Scene {
 protected:
     yume::vec2<int> mousePos{ yume::vec2<int>::ZERO() };
+    TTF_Font* font = TTF_OpenFont("IBMPlexSans-Medium.ttf", 24);
+    SDL_Color textColor = { 255, 255, 255, 255 };
+    SDL_Surface* textSurface = TTF_RenderText_Solid(font, "Press SPACE to continue!", textColor);
+    SDL_Texture* textTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
 
 public:
     Menu(SDL_Renderer* rend, SDL_Window* wind, SceneManager* mgr)
@@ -225,6 +214,7 @@ public:
 
     virtual void start() override {
         std::cout << "THE MENU SCENE HAS BEEN STARTED\n";
+        SDL_FreeSurface(textSurface);
     }
 
     virtual void handleEvents(SDL_Event& event) override {
@@ -248,6 +238,13 @@ public:
         SDL_RenderClear(renderer);
 
         SDL_SetRenderDrawColor(renderer, 15, 90, 45, 255);
+
+        int textWidth, textHeight;
+        SDL_QueryTexture(textTexture, NULL, NULL, &textWidth, &textHeight);
+
+        SDL_Rect renderQuad = { (640 - textWidth) / 2, (480 - textHeight) / 2, textWidth, textHeight };
+
+        SDL_RenderCopy(renderer, textTexture, NULL, &renderQuad);
 
         SDL_RenderPresent(renderer);
     }
@@ -335,6 +332,7 @@ int main(int argc, char* args[]) {
         std::cout << "SDL_Init Error: " << SDL_GetError() << '\n';
         return 1;
     }
+    TTF_Init();
 
     SDL_Window* window = SDL_CreateWindow("yume", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, SDL_WINDOW_SHOWN);
     SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
