@@ -3,4 +3,10 @@
 
 #include "../../config.hpp"
 
+class Text {
+public:
+	Text();
+	~Text();
+};
+
 #endif

@@ -20,8 +20,6 @@
 
 #include "packages/math/math.hpp"
 #include "packages/game_objects/rocket.hpp"
-#include "packages/scene_manager/scene.hpp"
-#include "packages/scene_manager/scene_manager.hpp"
 #include "packages/ui_objects/text.hpp"
 
 #endif

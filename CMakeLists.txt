@@ -54,15 +54,9 @@ add_executable(${PROJECT_NAME}
     program/packages/game_objects/rocket.cpp
     program/packages/game_objects/rocket.hpp
     
-    program/packages/scene_manager/scene.cpp
-    program/packages/scene_manager/scene.hpp
-    
-    program/packages/scene_manager/scene_manager.cpp
-    program/packages/scene_manager/scene_manager.hpp
-    
     program/packages/ui_objects/text.cpp
     program/packages/ui_objects/text.hpp
-)
+ )
 
 if (WIN32)
     target_link_libraries(${PROJECT_NAME}
