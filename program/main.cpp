@@ -77,7 +77,9 @@ public:
 class Menu : public Scene {
 protected:
     yume::vec2<int> mousePos{ yume::vec2<int>::ZERO() };
-    Text* pressText = new Text(yume::vec2<int>{ 205, 550 }, 32, SDL_Color{ 255, 255, 255, 255 }, "Select option by pressing space!", renderer);
+    Text* titleText = new Text(yume::vec2<int>{ 150, 60 }, 50, SDL_Color{ 255, 255, 255, 255 }, "  The Rocket Program ", renderer);
+    Text* creatorText = new Text(yume::vec2<int>{ 125, 545 }, 18, SDL_Color{ 255, 255, 255, 255 }, " >      The game is made by dazai. Credits -> Art: Emilia Piekarska ", renderer);
+    Text* pressText = new Text(yume::vec2<int>{ 125, 565 }, 18, SDL_Color{ 255, 255, 255, 255 }, "Select option by pressing space, switch options by pressing arrows.", renderer);
     Text* startText = new Text(yume::vec2<int>{ 360, 240 }, 32, SDL_Color{ 255, 255, 255, 255 }, "Start", renderer);
     Text* quitText = new Text(yume::vec2<int>{ 360, 300 }, 32, SDL_Color{ 255, 255, 255, 255 }, "Quit", renderer);
     int selectedOptionIndex = 0;
@@ -88,6 +90,7 @@ public:
 
     virtual void start() override {
         std::cout << "THE MENU SCENE HAS BEEN STARTED\n";
+        selectedOptionIndex = 0;
     }
 
     virtual void handleEvents(SDL_Event& event) override {
@@ -132,6 +135,8 @@ public:
         pressText->render(renderer);
         startText->render(renderer);
         quitText->render(renderer);
+        creatorText->render(renderer);
+        titleText->render(renderer);
 
         SDL_RenderPresent(renderer);
     }
@@ -140,6 +145,8 @@ public:
         delete pressText;
         delete startText;
         delete quitText;
+        delete creatorText;
+        delete titleText;
     }
 };
 
@@ -150,6 +157,12 @@ protected:
 
     Rocket* rocket = new Rocket(yume::vec2<float>{ 500, 500 }, yume::vec2<float>{ 32, 64 }, renderer);
     Earth* earth = new Earth(yume::vec2<float>{ 0, 500 }, yume::vec2<float>{ 1000, 1000 }, renderer);
+
+    Text* thrustText = new Text(yume::vec2<int>{ 5, 15 }, 24, { 255, 255, 255, 255 }, "Thrust: ", renderer);
+    Text* velocityText = new Text(yume::vec2<int>{ 5, 40 }, 24, { 255, 255, 255, 255 }, "Velocity: ", renderer);
+    Text* engineText = new Text(yume::vec2<int>{ 5, 65 }, 24, { 255, 255, 255, 255 }, "Engine: ", renderer);
+    Text* rotationText = new Text(yume::vec2<int>{ 5, 90 }, 24, { 255, 255, 255, 255 }, "Rotation: ", renderer);
+    Text* heightText = new Text(yume::vec2<int>{ 5, 115 }, 24, { 255, 255, 255, 255 }, "Height: ", renderer);
 
     float timer{};
 
@@ -171,6 +184,10 @@ public:
 
         if (event.type == SDL_QUIT || state_1[SDL_SCANCODE_ESCAPE]) {
             quitScene();
+        }
+
+        if (state_1[SDL_SCANCODE_ESCAPE]) {
+            manager->switchScene(0);
         }
 
         if (state_1[SDL_SCANCODE_W]) { 
@@ -202,8 +219,19 @@ public:
         rocket->update(deltaTime);
         // earth->update(deltaTime);
 
+        thrustText->updateText(std::string("Thrust: ") + std::to_string(rocket->thrust), renderer);
+        velocityText->updateText(std::string("Velocity: ") + std::to_string(rocket->velocity.length()), renderer);
+        if (rocket->getEngineState()) {
+            engineText->updateText(std::string("Engine: On"), renderer);
+        }
+        else {
+            engineText->updateText(std::string("Engine: Off"), renderer);
+        }
+        rotationText->updateText(std::string("Rotation: ") + std::to_string(rocket->rotation), renderer);
+        heightText->updateText(std::string("Height: ") + std::to_string(abs(550 - rocket->position.y) - 14), renderer);
+
         timer += 1.0f * deltaTime;
-        if (timer >= 1.0f) {
+        if (timer >= 10.0f) {
             rocket->printLog();
             timer = 0.0f;
         }
@@ -215,6 +243,11 @@ public:
 
         rocket->render(renderer);
         // earth->render(renderer);
+        thrustText->render(renderer);
+        velocityText->render(renderer);
+        engineText->render(renderer);
+        rotationText->render(renderer);
+        heightText->render(renderer);
 
         SDL_RenderPresent(renderer);
     }
@@ -222,6 +255,11 @@ public:
     ~Game() {
         delete rocket;
         delete earth;
+        delete thrustText;
+        delete velocityText;
+        delete engineText;
+        delete rotationText;
+        delete heightText;
     }
 };
 

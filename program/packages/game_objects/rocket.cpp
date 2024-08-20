@@ -55,6 +55,13 @@ void Rocket::update(float deltaTime) {
             }
         }
     }
+
+    if (rotation > 360.0f) {
+        rotation = 0.0f;
+    }
+    else if (rotation < 0.0f) {
+        rotation = 360.0f;
+    }
 }
 
 void Rocket::render(SDL_Renderer* renderer) {
@@ -62,15 +69,19 @@ void Rocket::render(SDL_Renderer* renderer) {
     SDL_RenderCopyEx(renderer, rocketTexture, nullptr, &rocketRect, rotation - 90, nullptr, SDL_FLIP_NONE);
 }
 
+bool Rocket::getEngineState() {
+    return engine_enable;
+}
+
 void Rocket::increaseThrust() {
     if (thrust < max_thrust) {
-        thrust += 0.8f;
+        thrust += 0.32f;
     }
 }
 
 void Rocket::decreaseThrust() {
     if (thrust > 0) {
-        thrust -= 1.0f;
+        thrust -= 0.48f;
     }
 }
 

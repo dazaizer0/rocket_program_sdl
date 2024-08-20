@@ -5,7 +5,7 @@
 
 class Rocket {
 private:
-    const float max_thrust = 14.0;
+    const float max_thrust = 16.0;
     const float air_resistance_factor = 0.98f;
     bool engine_enable = true;
     bool grounded{};
@@ -26,6 +26,7 @@ public:
     Rocket(yume::vec2<float> position_v, yume::vec2<float> size_v, SDL_Renderer* renderer);
     void update(float deltaTime);
     void render(SDL_Renderer* renderer);
+    bool getEngineState();
     void increaseThrust();
     void decreaseThrust();
     void rotateLeft();

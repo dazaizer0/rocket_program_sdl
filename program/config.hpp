@@ -17,6 +17,8 @@
 #include <iostream>
 #include <vector>
 #include <memory>
+#include <string>
+#include <cmath>
 
 #include "packages/math/math.hpp"
 #include "packages/game_objects/rocket.hpp"
