@@ -3,14 +3,14 @@
 
 #include "../../config.hpp"
 
-SDL_Texture* loadTexture(const char* file, SDL_Renderer* ren);
-
 class Rocket {
 private:
     const float max_thrust = 14.0;
     const float air_resistance_factor = 0.98f;
     bool engine_enable = true;
     bool grounded{};
+
+    SDL_Texture* loadTexture(const char* file, SDL_Renderer* ren);
 
 public:
     yume::vec2<float> position;

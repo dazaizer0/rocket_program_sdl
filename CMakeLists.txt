@@ -56,7 +56,10 @@ add_executable(${PROJECT_NAME}
     
     program/packages/ui_objects/text.cpp
     program/packages/ui_objects/text.hpp
- )
+
+    program/packages/game_objects/earth.cpp
+    program/packages/game_objects/earth.hpp
+)
 
 if (WIN32)
     target_link_libraries(${PROJECT_NAME}

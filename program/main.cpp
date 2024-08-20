@@ -26,7 +26,9 @@ public:
         quit = true;
     }
 
-    virtual ~Scene() {}
+    virtual ~Scene() {
+
+    }
 };
 
 class SceneManager {
@@ -75,10 +77,10 @@ public:
 class Menu : public Scene {
 protected:
     yume::vec2<int> mousePos{ yume::vec2<int>::ZERO() };
-    TTF_Font* font = TTF_OpenFont("IBMPlexSans-Medium.ttf", 24);
-    SDL_Color textColor = { 255, 255, 255, 255 };
-    SDL_Surface* textSurface = TTF_RenderText_Solid(font, "Press SPACE to continue!", textColor);
-    SDL_Texture* textTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
+    Text* pressText = new Text(yume::vec2<int>{ 205, 550 }, 32, SDL_Color{ 255, 255, 255, 255 }, "Select option by pressing space!", renderer);
+    Text* startText = new Text(yume::vec2<int>{ 360, 240 }, 32, SDL_Color{ 255, 255, 255, 255 }, "Start", renderer);
+    Text* quitText = new Text(yume::vec2<int>{ 360, 300 }, 32, SDL_Color{ 255, 255, 255, 255 }, "Quit", renderer);
+    int selectedOptionIndex = 0;
 
 public:
     Menu(SDL_Renderer* rend, SDL_Window* wind, SceneManager* mgr)
@@ -86,7 +88,6 @@ public:
 
     virtual void start() override {
         std::cout << "THE MENU SCENE HAS BEEN STARTED\n";
-        SDL_FreeSurface(textSurface);
     }
 
     virtual void handleEvents(SDL_Event& event) override {
@@ -97,13 +98,30 @@ public:
             quitScene();
         }
 
-        if (state_1[SDL_SCANCODE_SPACE]) {
+        if (state_1[SDL_SCANCODE_SPACE] && selectedOptionIndex == 0) {
             manager->switchScene(1);
+        }
+        else if (state_1[SDL_SCANCODE_SPACE] && selectedOptionIndex == 1) {
+            quitScene();
+        }
+
+        if (state_1[SDL_SCANCODE_UP] && selectedOptionIndex == 1) {
+            selectedOptionIndex = 0;
+        }
+        else if (state_1[SDL_SCANCODE_DOWN] && selectedOptionIndex == 0) {
+            selectedOptionIndex = 1;
         }
     }
 
     virtual void update() override {
-
+        if (selectedOptionIndex == 0) {
+            startText->updateText("> Start", renderer);
+            quitText->updateText("Quit", renderer);
+        }
+        else if (selectedOptionIndex == 1) {
+            quitText->updateText("> Quit", renderer);
+            startText->updateText("Start", renderer);
+        }
     }
 
     virtual void render() override {
@@ -111,14 +129,17 @@ public:
 
         SDL_SetRenderDrawColor(renderer, 15, 90, 45, 255);
 
-        int textWidth, textHeight;
-        SDL_QueryTexture(textTexture, NULL, NULL, &textWidth, &textHeight);
-
-        SDL_Rect renderQuad = { (640 - textWidth) / 2, (480 - textHeight) / 2, textWidth, textHeight };
-
-        SDL_RenderCopy(renderer, textTexture, NULL, &renderQuad);
+        pressText->render(renderer);
+        startText->render(renderer);
+        quitText->render(renderer);
 
         SDL_RenderPresent(renderer);
+    }
+
+    ~Menu() {
+        delete pressText;
+        delete startText;
+        delete quitText;
     }
 };
 
@@ -128,12 +149,14 @@ protected:
     Uint32 lastTime{};
 
     Rocket* rocket = new Rocket(yume::vec2<float>{ 500, 500 }, yume::vec2<float>{ 32, 64 }, renderer);
+    Earth* earth = new Earth(yume::vec2<float>{ 0, 500 }, yume::vec2<float>{ 1000, 1000 }, renderer);
 
     float timer{};
 
 public:
     Game(SDL_Renderer* rend, SDL_Window* wind, SceneManager* mgr)
-        : Scene(rend, wind, mgr) {}
+        : Scene(rend, wind, mgr) {
+    }
 
     virtual void start() override {
         std::cout << "THE GAME SCENE HAS BEEN STARTED\n";
@@ -177,6 +200,7 @@ public:
         lastTime = currentTime;
 
         rocket->update(deltaTime);
+        // earth->update(deltaTime);
 
         timer += 1.0f * deltaTime;
         if (timer >= 1.0f) {
@@ -190,12 +214,14 @@ public:
         SDL_RenderClear(renderer);
 
         rocket->render(renderer);
+        // earth->render(renderer);
 
         SDL_RenderPresent(renderer);
     }
 
     ~Game() {
         delete rocket;
+        delete earth;
     }
 };
 

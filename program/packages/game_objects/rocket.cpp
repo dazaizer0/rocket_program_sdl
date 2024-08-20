@@ -1,6 +1,6 @@
 #include "rocket.hpp"
 
-SDL_Texture* loadTexture(const char* file, SDL_Renderer* ren) {
+SDL_Texture* Rocket::loadTexture(const char* file, SDL_Renderer* ren) {
     SDL_Surface* surface = IMG_Load(file);
     if (surface == nullptr) {
         printf("IMG_Load Error: %s\n", IMG_GetError());
