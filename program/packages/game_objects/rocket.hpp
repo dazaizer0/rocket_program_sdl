@@ -8,7 +8,6 @@ private:
     const float max_thrust = 16.0;
     const float air_resistance_factor = 0.98f;
     bool engine_enable = true;
-    bool grounded{};
 
     SDL_Texture* loadTexture(const char* file, SDL_Renderer* ren);
 
@@ -17,6 +16,8 @@ public:
     yume::vec2<float> size;
     yume::vec2<float> velocity;
     SDL_Texture* rocketTexture;
+    bool grounded;
+    bool on_island;
     float rotation;
     float thrust;
     float gravity;
@@ -34,6 +35,7 @@ public:
     void turnOnEngine();
     void turnOffEngine();
     void printLog();
+    ~Rocket();
 };
 
 #endif

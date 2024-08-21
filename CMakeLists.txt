@@ -59,6 +59,9 @@ add_executable(${PROJECT_NAME}
 
     program/packages/game_objects/earth.cpp
     program/packages/game_objects/earth.hpp
+
+    program/packages/game_objects/island.cpp
+    program/packages/game_objects/island.hpp
 )
 
 if (WIN32)

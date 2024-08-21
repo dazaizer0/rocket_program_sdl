@@ -26,5 +26,5 @@ void Earth::render(SDL_Renderer* renderer) {
 }
 
 Earth::~Earth() {
-
+    // delete earthTexture;
 } 

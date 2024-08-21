@@ -12,7 +12,7 @@ SDL_Texture* Rocket::loadTexture(const char* file, SDL_Renderer* ren) {
 }
 
 Rocket::Rocket(yume::vec2<float> position_v, yume::vec2<float> size_v, SDL_Renderer* renderer)
-    : position(position_v), size(size_v), velocity(yume::vec2<float>(0, 0)), rotation(90), thrust(0), gravity(9.81), thrustPower(1.0), rotationalVelocity(0.0f) {
+    : position(position_v), size(size_v), velocity(yume::vec2<float>(0, 0)), rotation(90), thrust(0), gravity(9.81), thrustPower(1.0), rotationalVelocity(0.0f), grounded(false), on_island(false) {
     rocketTexture = loadTexture("rocket.png", renderer);
 }
 
@@ -31,8 +31,6 @@ void Rocket::update(float deltaTime) {
     rotation = rotation + rotationalVelocity * deltaTime;
 
     if (position.y > 600 - size.y) {
-        position.y = 600 - size.y;
-        velocity = yume::vec2<float>::ZERO();
         grounded = true;
     }
     else {
@@ -40,6 +38,9 @@ void Rocket::update(float deltaTime) {
     }
 
     if (grounded) {
+        position.y = 600 - size.y;
+        velocity = yume::vec2<float>::ZERO();
+
         if (rotation > 105 && rotation < 180) {
             rotationalVelocity += 0.6f;
         }
@@ -116,4 +117,8 @@ void Rocket::printLog() {
     std::cout << "> Rotation: " << rotation << '\n';
     std::cout << "> Rotational Velocity: " << rotationalVelocity << '\n';
     std::cout << "> Engine: " << engine_enable << '\n';
+}
+
+Rocket::~Rocket() {
+    // delete rocketTexture;
 }

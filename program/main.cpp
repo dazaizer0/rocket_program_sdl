@@ -157,6 +157,7 @@ protected:
 
     Rocket* rocket = new Rocket(yume::vec2<float>{ 500, 500 }, yume::vec2<float>{ 32, 64 }, renderer);
     Earth* earth = new Earth(yume::vec2<float>{ 0, 500 }, yume::vec2<float>{ 1000, 1000 }, renderer);
+    Island* island = new Island(yume::vec2<float>{ 200, 320 }, yume::vec2<float>{ 100, 66 }, renderer);
 
     Text* thrustText = new Text(yume::vec2<int>{ 5, 15 }, 24, { 255, 255, 255, 255 }, "Thrust: ", renderer);
     Text* velocityText = new Text(yume::vec2<int>{ 5, 40 }, 24, { 255, 255, 255, 255 }, "Velocity: ", renderer);
@@ -165,6 +166,7 @@ protected:
     Text* heightText = new Text(yume::vec2<int>{ 5, 115 }, 24, { 255, 255, 255, 255 }, "Height: ", renderer);
 
     float timer{};
+    float win_timer{};
 
 public:
     Game(SDL_Renderer* rend, SDL_Window* wind, SceneManager* mgr)
@@ -186,8 +188,16 @@ public:
             quitScene();
         }
 
+        if (event.button.button == SDL_BUTTON_LEFT) {
+            rocket->position = yume::vec2<float>{ (float)mousePos.x, (float)mousePos.y };
+        }
+
         if (state_1[SDL_SCANCODE_ESCAPE]) {
             manager->switchScene(0);
+        }
+
+        if (state_1[SDL_SCANCODE_0]) {
+            manager->switchScene(1);
         }
 
         if (state_1[SDL_SCANCODE_W]) { 
@@ -217,6 +227,18 @@ public:
         lastTime = currentTime;
 
         rocket->update(deltaTime);
+        island->update(&rocket->position, &rocket->size, &rocket->velocity, &rocket->grounded, &rocket->on_island);
+
+        if (rocket->grounded && rocket->on_island) {
+            win_timer += 1 * deltaTime;
+        }
+        else {
+            win_timer = 0.0f;
+        }
+
+        if (win_timer >= 4.0f) {
+            std::cout << "YOU WIN!\n";
+        }
         // earth->update(deltaTime);
 
         thrustText->updateText(std::string("Thrust: ") + std::to_string(rocket->thrust), renderer);
@@ -231,7 +253,7 @@ public:
         heightText->updateText(std::string("Height: ") + std::to_string(abs(550 - rocket->position.y) - 14), renderer);
 
         timer += 1.0f * deltaTime;
-        if (timer >= 10.0f) {
+        if (timer >= 5.0f) {
             rocket->printLog();
             timer = 0.0f;
         }
@@ -242,6 +264,7 @@ public:
         SDL_RenderClear(renderer);
 
         rocket->render(renderer);
+        island->render(renderer);
         // earth->render(renderer);
         thrustText->render(renderer);
         velocityText->render(renderer);
@@ -255,6 +278,7 @@ public:
     ~Game() {
         delete rocket;
         delete earth;
+        delete island;
         delete thrustText;
         delete velocityText;
         delete engineText;
