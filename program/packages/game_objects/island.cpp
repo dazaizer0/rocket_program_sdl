@@ -16,7 +16,7 @@ Island::Island(yume::vec2<float> position_v, yume::vec2<float> size_v, SDL_Rende
     islandTexture = loadTexture("island.png", renderer);
 }
 
-void Island::update(yume::vec2<float>* rocket_position, yume::vec2<float>* rocket_size, yume::vec2<float>* rocket_velocity, bool* rocket_grounded, bool* rocket_on_island) {
+void Island::update(yume::vec2<float>* rocket_position, yume::vec2<float>* rocket_size, yume::vec2<float>* rocket_velocity, bool* rocket_grounded, bool* rocket_on_island, std::function<void()> lvlOut) {
     bool collides_from_top = rocket_position->y + rocket_size->y > position.y
         && rocket_position->y < position.y
         && rocket_position->x < position.x + size.x
@@ -30,6 +30,8 @@ void Island::update(yume::vec2<float>* rocket_position, yume::vec2<float>* rocke
 
         *rocket_grounded = true;
         *rocket_on_island = true;
+
+        lvlOut();
 
         return;
     }

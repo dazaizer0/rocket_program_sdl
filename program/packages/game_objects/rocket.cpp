@@ -16,6 +16,26 @@ Rocket::Rocket(yume::vec2<float> position_v, yume::vec2<float> size_v, SDL_Rende
     rocketTexture = loadTexture("rocket.png", renderer);
 }
 
+void Rocket::levelOut() {
+    if (rotation > 105 && rotation < 180) {
+        is_stable = false;
+        rotationalVelocity += 0.6f;
+    }
+    else if (rotation < 75 && rotation > 0) {
+        is_stable = false;
+        rotationalVelocity -= 0.6f;
+    }
+    else if (rotation >= 75 && rotation <= 105) {
+        is_stable = true;
+        if (rotation > 90) {
+            rotationalVelocity -= 0.2f;
+        }
+        else if (rotation < 90) {
+            rotationalVelocity += 0.2f;
+        }
+    }
+}
+
 void Rocket::update(float deltaTime) {
     float radians = rotation * M_PI / 180.0f;
     yume::vec2<float> thrustForce(cos(radians) * thrust, sin(radians) * thrust);
@@ -30,7 +50,7 @@ void Rocket::update(float deltaTime) {
     rotationalVelocity = rotationalVelocity * air_resistance_factor;
     rotation = rotation + rotationalVelocity * deltaTime;
 
-    if (position.y > 600 - size.y) {
+    if (position.y > 495 - size.y) {
         grounded = true;
     }
     else {
@@ -38,23 +58,11 @@ void Rocket::update(float deltaTime) {
     }
 
     if (grounded) {
-        position.y = 600 - size.y;
+        position.y = 495 - size.y;
         velocity = yume::vec2<float>::ZERO();
+        on_island = false;
 
-        if (rotation > 105 && rotation < 180) {
-            rotationalVelocity += 0.6f;
-        }
-        else if (rotation < 75 && rotation > 0) {
-            rotationalVelocity -= 0.6f;
-        }
-        else if (rotation >= 75 && rotation <= 105) {
-            if (rotation > 90) {
-                rotationalVelocity -= 0.2f;
-            }
-            else if (rotation < 90) {
-                rotationalVelocity += 0.2f;
-            }
-        }
+        levelOut();
     }
 
     if (rotation > 360.0f) {

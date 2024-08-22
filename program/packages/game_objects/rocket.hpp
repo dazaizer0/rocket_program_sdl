@@ -18,6 +18,7 @@ public:
     SDL_Texture* rocketTexture;
     bool grounded;
     bool on_island;
+    bool is_stable;
     float rotation;
     float thrust;
     float gravity;
@@ -25,6 +26,7 @@ public:
     float rotationalVelocity;
 
     Rocket(yume::vec2<float> position_v, yume::vec2<float> size_v, SDL_Renderer* renderer);
+    void levelOut();
     void update(float deltaTime);
     void render(SDL_Renderer* renderer);
     bool getEngineState();

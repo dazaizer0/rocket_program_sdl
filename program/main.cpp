@@ -155,15 +155,17 @@ protected:
     yume::vec2<int> mousePos{ yume::vec2<int>::ZERO() };
     Uint32 lastTime{};
 
-    Rocket* rocket = new Rocket(yume::vec2<float>{ 500, 500 }, yume::vec2<float>{ 32, 64 }, renderer);
+    Rocket* rocket = new Rocket(yume::vec2<float>{ 500, 400 }, yume::vec2<float>{ 32, 64 }, renderer);
     Earth* earth = new Earth(yume::vec2<float>{ 0, 500 }, yume::vec2<float>{ 1000, 1000 }, renderer);
     Island* island = new Island(yume::vec2<float>{ 200, 320 }, yume::vec2<float>{ 100, 66 }, renderer);
+    Texture* background = new Texture(yume::vec2<float>{ 0, 0 }, yume::vec2<float>{ 800, 600 }, "background.png", renderer);
 
     Text* thrustText = new Text(yume::vec2<int>{ 5, 15 }, 24, { 255, 255, 255, 255 }, "Thrust: ", renderer);
     Text* velocityText = new Text(yume::vec2<int>{ 5, 40 }, 24, { 255, 255, 255, 255 }, "Velocity: ", renderer);
     Text* engineText = new Text(yume::vec2<int>{ 5, 65 }, 24, { 255, 255, 255, 255 }, "Engine: ", renderer);
     Text* rotationText = new Text(yume::vec2<int>{ 5, 90 }, 24, { 255, 255, 255, 255 }, "Rotation: ", renderer);
     Text* heightText = new Text(yume::vec2<int>{ 5, 115 }, 24, { 255, 255, 255, 255 }, "Height: ", renderer);
+
 
     float timer{};
     float win_timer{};
@@ -227,9 +229,9 @@ public:
         lastTime = currentTime;
 
         rocket->update(deltaTime);
-        island->update(&rocket->position, &rocket->size, &rocket->velocity, &rocket->grounded, &rocket->on_island);
+        island->update(&rocket->position, &rocket->size, &rocket->velocity, &rocket->grounded, &rocket->on_island, std::bind(&Rocket::levelOut, rocket));
 
-        if (rocket->grounded && rocket->on_island) {
+        if (rocket->grounded && rocket->on_island && rocket->is_stable) {
             win_timer += 1 * deltaTime;
         }
         else {
@@ -263,6 +265,8 @@ public:
         SDL_SetRenderDrawColor(renderer, 25, 10, 95, 255);
         SDL_RenderClear(renderer);
 
+        background->render(renderer);
+
         rocket->render(renderer);
         island->render(renderer);
         // earth->render(renderer);
@@ -279,6 +283,7 @@ public:
         delete rocket;
         delete earth;
         delete island;
+        delete background;
         delete thrustText;
         delete velocityText;
         delete engineText;

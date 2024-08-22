@@ -13,7 +13,7 @@ public:
 
 	Island(yume::vec2<float> position_v, yume::vec2<float> size_v, SDL_Renderer* renderer);
 
-	void update(yume::vec2<float>* rocket_position, yume::vec2<float>* rocket_size, yume::vec2<float>* rocket_velocity, bool* rocket_grounded, bool* rocket_on_island);
+	void update(yume::vec2<float>* rocket_position, yume::vec2<float>* rocket_size, yume::vec2<float>* rocket_velocity, bool* rocket_grounded, bool* rocket_on_island, std::function<void()> lvlOut);
 	void render(SDL_Renderer* renderer);
 
 	~Island();
