@@ -118,12 +118,12 @@ public:
 
     virtual void update() override {
         if (selectedOptionIndex == 0) {
-            startText->updateText("> Start", renderer);
-            quitText->updateText("Quit", renderer);
+            startText->updateText("> Start", { 255, 255, 255, 255 },  renderer);
+            quitText->updateText("Quit", { 255, 255, 255, 255 }, renderer);
         }
         else if (selectedOptionIndex == 1) {
-            quitText->updateText("> Quit", renderer);
-            startText->updateText("Start", renderer);
+            quitText->updateText("> Quit", { 255, 255, 255, 255 },  renderer);
+            startText->updateText("Start", { 255, 255, 255, 255 }, renderer);
         }
     }
 
@@ -155,6 +155,12 @@ protected:
     yume::vec2<int> mousePos{ yume::vec2<int>::ZERO() };
     Uint32 lastTime{};
 
+    std::random_device rd;
+    std::mt19937 gen{ rd() };
+    std::uniform_int_distribution<> dis{ 100, 350 };
+    std::uniform_int_distribution<> dis2{ 100, 600 };
+
+
     Rocket* rocket = new Rocket(yume::vec2<float>{ 500, 400 }, yume::vec2<float>{ 32, 64 }, renderer);
     Earth* earth = new Earth(yume::vec2<float>{ 0, 500 }, yume::vec2<float>{ 1000, 1000 }, renderer);
     Island* island = new Island(yume::vec2<float>{ 200, 320 }, yume::vec2<float>{ 100, 66 }, renderer);
@@ -165,14 +171,39 @@ protected:
     Text* engineText = new Text(yume::vec2<int>{ 5, 65 }, 24, { 255, 255, 255, 255 }, "Engine: ", renderer);
     Text* rotationText = new Text(yume::vec2<int>{ 5, 90 }, 24, { 255, 255, 255, 255 }, "Rotation: ", renderer);
     Text* heightText = new Text(yume::vec2<int>{ 5, 115 }, 24, { 255, 255, 255, 255 }, "Height: ", renderer);
+    Text* winStreakText = new Text(yume::vec2<int>{ 5, 150 }, 24, { 255, 255, 255, 255 }, "Win Streak: ", renderer);
 
+    Text* winCounterText = new Text(yume::vec2<int>{ 350, 300 }, 32, { 0, 0, 0, 255 }, "3.0", renderer);
+    Text* winText = new Text(yume::vec2<int>{ 325, 300 }, 36, { 0, 0, 0, 255 }, "YOU WON!", renderer);
+    Text* winText2 = new Text(yume::vec2<int>{ 325, 340 }, 16, { 0, 0, 0, 255 }, "press R to restart level", renderer);
+
+    Text* lossText = new Text(yume::vec2<int>{ 326, 300 }, 36, { 0, 0, 0, 255 }, "YOU LOST..", renderer);
+    Text* lossText2 = new Text(yume::vec2<int>{ 330, 340 }, 16, { 0, 0, 0, 255 }, "press R to restart level", renderer);
 
     float timer{};
     float win_timer{};
+    int winStreak = 0;
+    bool win = false;
+    bool lost = false;
 
 public:
     Game(SDL_Renderer* rend, SDL_Window* wind, SceneManager* mgr)
         : Scene(rend, wind, mgr) {
+    }
+
+    void restartProgress() {
+        rocket->position = yume::vec2<float>{ 500, 400 };
+        rocket->rotation = 90;
+        island->position = yume::vec2<float>{ static_cast<float>(dis(gen)), static_cast<float>(dis(gen)) };
+        if (win) {
+            island->size = yume::vec2<float>{ island->size.x - 6.5f, island->size.y - 6.5f };
+            winStreak += 1;
+        }
+
+        if (lost) winStreak = 0;
+
+        win = false;
+        lost = false;
     }
 
     virtual void start() override {
@@ -198,8 +229,8 @@ public:
             manager->switchScene(0);
         }
 
-        if (state_1[SDL_SCANCODE_0]) {
-            manager->switchScene(1);
+        if (state_1[SDL_SCANCODE_R]) { // RESTART SCENE
+            restartProgress();
         }
 
         if (state_1[SDL_SCANCODE_W]) { 
@@ -233,31 +264,39 @@ public:
 
         if (rocket->grounded && rocket->on_island && rocket->is_stable) {
             win_timer += 1 * deltaTime;
+            winCounterText->updateText(std::to_string(4.0f - win_timer), { 0, 0, 0, 255 }, renderer);
         }
         else {
             win_timer = 0.0f;
         }
-
-        if (win_timer >= 4.0f) {
-            std::cout << "YOU WIN!\n";
-        }
         // earth->update(deltaTime);
 
-        thrustText->updateText(std::string("Thrust: ") + std::to_string(rocket->thrust), renderer);
-        velocityText->updateText(std::string("Velocity: ") + std::to_string(rocket->velocity.length()), renderer);
+        thrustText->updateText(std::string("Thrust: ") + std::to_string(rocket->thrust), { 255, 255, 255, 255 },  renderer);
+        velocityText->updateText(std::string("Velocity: ") + std::to_string(rocket->velocity.length()), { 255, 255, 255, 255 }, renderer);
         if (rocket->getEngineState()) {
-            engineText->updateText(std::string("Engine: On"), renderer);
+            engineText->updateText(std::string("Engine: On"), { 255, 255, 255, 255 }, renderer);
         }
         else {
-            engineText->updateText(std::string("Engine: Off"), renderer);
+            engineText->updateText(std::string("Engine: Off"), { 255, 0, 100, 255 }, renderer);
         }
-        rotationText->updateText(std::string("Rotation: ") + std::to_string(rocket->rotation), renderer);
-        heightText->updateText(std::string("Height: ") + std::to_string(abs(550 - rocket->position.y) - 14), renderer);
+        rotationText->updateText(std::string("Rotation: ") + std::to_string(rocket->rotation), { 255, 255, 255, 255 }, renderer);
+        heightText->updateText(std::string("Height: ") + std::to_string(abs(550 - rocket->position.y) - 14), { 255, 255, 255, 255 }, renderer);
+        winStreakText->updateText(std::string("Win Streak: ") + std::to_string(winStreak), { 255, 200, 200, 255 }, renderer);
 
         timer += 1.0f * deltaTime;
-        if (timer >= 5.0f) {
+        if (timer >= 2.0f) {
             rocket->printLog();
             timer = 0.0f;
+
+            std::cout << "\n WIN: " << win << '\n';
+            std::cout << " LOSS: " << lost << '\n';
+        }
+
+        if (rocket->position.x > 230.0f && rocket->position.x < 320.0f) {
+            rocket->is_stable = false;
+        }
+        else if (rocket->position.x > 620.0f && rocket->position.x < 680.0f) {
+            rocket->is_stable = false;
         }
     }
 
@@ -275,6 +314,23 @@ public:
         engineText->render(renderer);
         rotationText->render(renderer);
         heightText->render(renderer);
+        winStreakText->render(renderer);
+
+        if (win_timer >= 4.0f) {
+            winText->render(renderer);
+            winText2->render(renderer);
+            win = true;
+        }
+
+        if (rocket->grounded && rocket->on_island && rocket->is_stable && win_timer < 4.0f) {
+            winCounterText->render(renderer);
+        }
+
+        if (rocket->grounded && !rocket->is_stable) {
+            lossText->render(renderer);
+            lossText2->render(renderer);
+            lost = true;
+        }
 
         SDL_RenderPresent(renderer);
     }
@@ -289,6 +345,12 @@ public:
         delete engineText;
         delete rotationText;
         delete heightText;
+        delete winText;
+        delete winText2;
+        delete lossText;
+        delete lossText2;
+        delete winStreakText;
+        delete winCounterText;
     }
 };
 

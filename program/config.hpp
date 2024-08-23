@@ -20,6 +20,7 @@
 #include <string>
 #include <cmath>
 #include <functional>
+#include <random>
 
 #include "packages/math/math.hpp"
 #include "packages/game_objects/rocket.hpp"

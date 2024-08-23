@@ -18,15 +18,12 @@ Rocket::Rocket(yume::vec2<float> position_v, yume::vec2<float> size_v, SDL_Rende
 
 void Rocket::levelOut() {
     if (rotation > 105 && rotation < 180) {
-        is_stable = false;
         rotationalVelocity += 0.6f;
     }
     else if (rotation < 75 && rotation > 0) {
-        is_stable = false;
         rotationalVelocity -= 0.6f;
     }
     else if (rotation >= 75 && rotation <= 105) {
-        is_stable = true;
         if (rotation > 90) {
             rotationalVelocity -= 0.2f;
         }
@@ -70,6 +67,13 @@ void Rocket::update(float deltaTime) {
     }
     else if (rotation < 0.0f) {
         rotation = 360.0f;
+    }
+
+    if (rotation > 105.0f || rotation < 75.0f) {
+        is_stable = false;
+    }
+    else {
+        is_stable = true;
     }
 }
 
@@ -125,6 +129,9 @@ void Rocket::printLog() {
     std::cout << "> Rotation: " << rotation << '\n';
     std::cout << "> Rotational Velocity: " << rotationalVelocity << '\n';
     std::cout << "> Engine: " << engine_enable << '\n';
+    std::cout << "> Grounded: " << grounded << '\n';
+    std::cout << "> Is Stable: " << is_stable << '\n';
+    std::cout << "> On Island: " << on_island << '\n';
 }
 
 Rocket::~Rocket() {

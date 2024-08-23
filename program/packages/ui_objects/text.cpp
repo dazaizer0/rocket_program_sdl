@@ -17,14 +17,14 @@ void Text::render(SDL_Renderer* renderer) {
 	SDL_RenderCopy(renderer, textTexture, NULL, &renderQuad);
 }
 
-void Text::updateText(std::string new_text, SDL_Renderer* renderer) {
+void Text::updateText(std::string new_text, SDL_Color new_color, SDL_Renderer* renderer) {
 	text = new_text;
 
 	if (textTexture != nullptr) {
 		SDL_DestroyTexture(textTexture);
 	}
 
-	textSurface = TTF_RenderText_Solid(font, text.c_str(), textColor);
+	textSurface = TTF_RenderText_Solid(font, text.c_str(), new_color);
 	textTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
 	SDL_FreeSurface(textSurface);
 }
