@@ -69,11 +69,15 @@ void Rocket::update(float deltaTime) {
         rotation = 360.0f;
     }
 
-    if (rotation > 105.0f || rotation < 75.0f) {
-        is_stable = false;
+    if (rotation <= 105.0f && rotation >= 75.0f) {
+        is_stable = true;
     }
     else {
-        is_stable = true;
+        is_stable = false;
+    }
+
+    if (velocity.x != 0 && velocity.y != 0) {
+        previousVelocity = velocity;
     }
 }
 
@@ -123,7 +127,8 @@ void Rocket::turnOffEngine() {
 
 void Rocket::printLog() {
     std::cout << "\n-> Rocket's Stats: \n";
-    std::cout << "> Velocity: x: " << velocity.x << ", y: " << velocity.y << '\n';
+    std::cout << "> Velocity: x: " << velocity.x << ", y: " << velocity.y << " VECTOR LENGHT: " << velocity.length() << '\n';
+    std::cout << "> Previous Velocity: x: " << previousVelocity.x << ", y: " << previousVelocity.y << " VECTOR LENGHT: " << previousVelocity.length()  << '\n';
     std::cout << "> Actual Position: x:" << position.x << ", y: " << position.y << '\n';
     std::cout << "> Thrust: " << thrust << '\n';
     std::cout << "> Rotation: " << rotation << '\n';
