@@ -416,6 +416,8 @@ int main(int argc, char* args[]) {
 
     Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048);
     Mix_Music* bgm = Mix_LoadMUS("8bitmusic.mp3");
+
+    Mix_VolumeMusic(96);
     Mix_PlayMusic(bgm, -1);
 
     SDL_Window* window = SDL_CreateWindow("Rocket Program", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, SDL_WINDOW_SHOWN);
