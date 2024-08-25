@@ -178,6 +178,7 @@ protected:
     Text* rotationText = new Text(yume::vec2<int>{ 5, 115 }, 24, { 255, 255, 255, 255 }, "Rotation: ", renderer);
     Text* heightText = new Text(yume::vec2<int>{ 5, 150 }, 24, { 255, 255, 255, 255 }, "Height: ", renderer);
     Text* winStreakText = new Text(yume::vec2<int>{ 5, 175 }, 24, { 255, 255, 255, 255 }, "Win Streak: ", renderer);
+    Text* turnOnEngineText = new Text(yume::vec2<int>{ 300, 300 }, 32, { 255, 0, 0, 255 }, "TURN ON ENGINE!", renderer);
 
     Text* winCounterText = new Text(yume::vec2<int>{ 350, 300 }, 32, { 0, 0, 0, 255 }, "3.0", renderer);
     Text* winText = new Text(yume::vec2<int>{ 325, 300 }, 36, { 0, 0, 0, 255 }, "YOU WON!", renderer);
@@ -196,6 +197,7 @@ protected:
     bool lost = false;
     bool startScreen = true;
     int channel = -1;
+    bool engineNotification = false;
 
 public:
     Game(SDL_Renderer* rend, SDL_Window* wind, SceneManager* mgr)
@@ -205,6 +207,7 @@ public:
     void restartProgress() {
         rocket->position = yume::vec2<float>{ 575, 410 };
         rocket->velocity = yume::vec2<float>::ZERO();
+        rocket->previousVelocity = yume::vec2<float>::ZERO();
         rocket->rotation = 90;
         island->position = yume::vec2<float>{ static_cast<float>(dis_x(gen)), static_cast<float>(dis_y(gen)) };
         airstrip->size = island->size;
@@ -218,6 +221,7 @@ public:
 
         win = false;
         lost = false;
+        rocket->on_island = false;
     }
 
     virtual void start() override {
@@ -231,6 +235,7 @@ public:
     virtual void handleEvents(SDL_Event& event) override {
         const Uint8* state_1 = SDL_GetKeyboardState(NULL);
         const Uint8* state_2 = SDL_GetKeyboardState(NULL);
+        const Uint8* state_3 = SDL_GetKeyboardState(NULL);
 
         Uint32 mouse_state_1 = SDL_GetMouseState(&mousePos.x, &mousePos.y);
 
@@ -238,9 +243,9 @@ public:
             quitScene();
         }
 
-        //if (event.button.button == SDL_BUTTON_LEFT) {
-        //    rocket->position = yume::vec2<float>{ (float)mousePos.x, (float)mousePos.y };
-        //}
+        if (event.button.button == SDL_BUTTON_LEFT) {
+            // rocket->position = yume::vec2<float>{ (float)mousePos.x, (float)mousePos.y };
+        }
 
         if (state_1[SDL_SCANCODE_ESCAPE]) {
             manager->switchScene(0);
@@ -274,6 +279,13 @@ public:
         }
         else if (state_2[SDL_SCANCODE_D]) {
             rocket->rotateRight(); 
+        }
+
+        if (state_1[SDL_SCANCODE_W] && !rocket->engine_enable) {
+            engineNotification = true;
+        }
+        else {
+            engineNotification = false;
         }
     }
 
@@ -337,6 +349,10 @@ public:
             rocket->is_stable = false;
         }
 
+        if (win && !rocket->grounded) {
+            win = false;
+        }
+
         if (rocket->grounded == true) {
             if (rocket->is_stable == true && rocket->on_island == true && rocket->previousVelocity.length() <= 40.0f) {
                 win = true;
@@ -385,6 +401,10 @@ public:
             howToPlay->render(renderer);
         }
 
+        if (engineNotification && !startScreen) {
+            turnOnEngineText->render(renderer);
+        }
+
         SDL_RenderPresent(renderer);
     }
 
@@ -407,6 +427,7 @@ public:
         delete winStreakText;
         delete winCounterText;
         delete howToPlay;
+        delete turnOnEngineText;
         Mix_FreeChunk(woosh);
         Mix_FreeChunk(booster);
     }
