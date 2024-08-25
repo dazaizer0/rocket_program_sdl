@@ -167,6 +167,7 @@ protected:
     Rocket* rocket = new Rocket(yume::vec2<float>{ 575, 410 }, yume::vec2<float>{ 32, 64 }, renderer);
     Earth* earth = new Earth(yume::vec2<float>{ 0, 500 }, yume::vec2<float>{ 1000, 1000 }, renderer);
     Island* island = new Island(yume::vec2<float>{ 200, 320 }, yume::vec2<float>{ 100, 66 }, renderer);
+    Texture* airstrip = new Texture(yume::vec2<float>{ 200, 320 }, yume::vec2<float>{ 100, 66 }, "airstrip.png", renderer);
     Texture* background = new Texture(yume::vec2<float>{ 0, 0 }, yume::vec2<float>{ 800, 600 }, "background.png", renderer);
     Texture* howToPlay = new Texture(yume::vec2<float>{ 0, 0 }, yume::vec2<float>{ 800, 600 }, "howtoplay.png", renderer);
 
@@ -206,6 +207,8 @@ public:
         rocket->velocity = yume::vec2<float>::ZERO();
         rocket->rotation = 90;
         island->position = yume::vec2<float>{ static_cast<float>(dis_x(gen)), static_cast<float>(dis_y(gen)) };
+        airstrip->size = island->size;
+        airstrip->position = island->position;
         if (win) {
             island->size = yume::vec2<float>{ island->size.x - 6.5f, island->size.y - 6.5f };
             winStreak += 1;
@@ -354,6 +357,7 @@ public:
 
         rocket->render(renderer);
         island->render(renderer);
+        airstrip->render(renderer);
         // earth->render(renderer);
         thrustText->render(renderer);
         velocityText->render(renderer);
@@ -388,6 +392,7 @@ public:
         delete rocket;
         delete earth;
         delete island;
+        delete airstrip;
         delete background;
         delete thrustText;
         delete velocityText;
