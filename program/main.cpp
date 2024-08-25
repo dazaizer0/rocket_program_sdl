@@ -78,7 +78,7 @@ class Menu : public Scene {
 protected:
     yume::vec2<int> mousePos{ yume::vec2<int>::ZERO() };
     Text* titleText = new Text(yume::vec2<int>{ 150, 60 }, 50, SDL_Color{ 250, 250, 250, 255 }, "  The Rocket Program ", renderer);
-    Text* creatorText = new Text(yume::vec2<int>{ 125, 545 }, 18, SDL_Color{ 255, 255, 255, 255 }, " >      The game is made by dazai. Credits -> Art: Emilia ", renderer);
+    Text* creatorText = new Text(yume::vec2<int>{ 212, 545 }, 18, SDL_Color{ 255, 255, 255, 255 }, "The game is made by dazai. Credits: Art-Emilia", renderer);
     Text* pressText = new Text(yume::vec2<int>{ 125, 565 }, 18, SDL_Color{ 255, 255, 255, 255 }, "Select option by pressing space, switch options by pressing arrows.", renderer);
     Text* startText = new Text(yume::vec2<int>{ 360, 240 }, 32, SDL_Color{ 0, 0, 0, 255 }, "Start", renderer);
     Text* quitText = new Text(yume::vec2<int>{ 360, 300 }, 32, SDL_Color{ 0, 0, 0, 255 }, "Quit", renderer);
@@ -243,9 +243,9 @@ public:
             quitScene();
         }
 
-        if (event.button.button == SDL_BUTTON_LEFT) {
-            // rocket->position = yume::vec2<float>{ (float)mousePos.x, (float)mousePos.y };
-        }
+        //if (event.button.button == SDL_BUTTON_LEFT) {
+        //    rocket->position = yume::vec2<float>{ (float)mousePos.x, (float)mousePos.y };
+        //}
 
         if (state_1[SDL_SCANCODE_ESCAPE]) {
             manager->switchScene(0);
