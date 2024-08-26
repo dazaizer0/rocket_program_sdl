@@ -78,7 +78,7 @@ class Menu : public Scene {
 protected:
     yume::vec2<int> mousePos{ yume::vec2<int>::ZERO() };
     Text* titleText = new Text(yume::vec2<int>{ 150, 60 }, 50, SDL_Color{ 250, 250, 250, 255 }, "  The Rocket Program ", renderer);
-    Text* creatorText = new Text(yume::vec2<int>{ 212, 545 }, 18, SDL_Color{ 255, 255, 255, 255 }, "The game is made by dazai. Credits: Art-Emilia", renderer);
+    Text* creatorText = new Text(yume::vec2<int>{ 130, 545 }, 18, SDL_Color{ 255, 255, 255, 255 }, "The game is made by dazai. Credits: Background is made by Emilia", renderer);
     Text* pressText = new Text(yume::vec2<int>{ 125, 565 }, 18, SDL_Color{ 255, 255, 255, 255 }, "Select option by pressing space, switch options by pressing arrows.", renderer);
     Text* startText = new Text(yume::vec2<int>{ 360, 240 }, 32, SDL_Color{ 0, 0, 0, 255 }, "Start", renderer);
     Text* quitText = new Text(yume::vec2<int>{ 360, 300 }, 32, SDL_Color{ 0, 0, 0, 255 }, "Quit", renderer);
@@ -178,7 +178,7 @@ protected:
     Text* rotationText = new Text(yume::vec2<int>{ 5, 115 }, 24, { 255, 255, 255, 255 }, "Rotation: ", renderer);
     Text* heightText = new Text(yume::vec2<int>{ 5, 150 }, 24, { 255, 255, 255, 255 }, "Height: ", renderer);
     Text* winStreakText = new Text(yume::vec2<int>{ 5, 175 }, 24, { 255, 255, 255, 255 }, "Win Streak: ", renderer);
-    Text* turnOnEngineText = new Text(yume::vec2<int>{ 300, 300 }, 32, { 255, 0, 0, 255 }, "TURN ON ENGINE!", renderer);
+    Text* turnOnEngineText = new Text(yume::vec2<int>{ 280, 300 }, 32, { 255, 0, 0, 255 }, "TURN ON THE ENGINE!", renderer);
 
     Text* winCounterText = new Text(yume::vec2<int>{ 350, 300 }, 32, { 0, 0, 0, 255 }, "3.0", renderer);
     Text* winText = new Text(yume::vec2<int>{ 325, 300 }, 36, { 0, 0, 0, 255 }, "YOU WON!", renderer);
@@ -401,7 +401,7 @@ public:
             howToPlay->render(renderer);
         }
 
-        if (engineNotification && !startScreen) {
+        if (engineNotification && !startScreen && !win && !lost) {
             turnOnEngineText->render(renderer);
         }
 
@@ -428,6 +428,7 @@ public:
         delete winCounterText;
         delete howToPlay;
         delete turnOnEngineText;
+
         Mix_FreeChunk(woosh);
         Mix_FreeChunk(booster);
     }
