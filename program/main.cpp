@@ -165,6 +165,8 @@ protected:
 
 
     Rocket* rocket = new Rocket(yume::vec2<float>{ 575, 410 }, yume::vec2<float>{ 32, 64 }, renderer);
+    Texture* rocketBoosterAnim = new Texture(yume::vec2<float>{ rocket->position.x, rocket->position.y }, yume::vec2<float>{ 32, 64 }, "booster1.png", renderer);
+    std::vector<std::string> rocketBoosterAnimFiles{ "booster1.png", "booster2.png", "booster3.png" };
     Earth* earth = new Earth(yume::vec2<float>{ 0, 500 }, yume::vec2<float>{ 1000, 1000 }, renderer);
     Island* island = new Island(yume::vec2<float>{ 200, 320 }, yume::vec2<float>{ 100, 66 }, renderer);
     Texture* airstrip = new Texture(yume::vec2<float>{ 200, 320 }, yume::vec2<float>{ 100, 66 }, "airstrip.png", renderer);
@@ -209,6 +211,7 @@ public:
         rocket->velocity = yume::vec2<float>::ZERO();
         rocket->previousVelocity = yume::vec2<float>::ZERO();
         rocket->rotation = 90;
+        rocketBoosterAnim->position = yume::vec2<float>{ rocket->position.x, rocket->position.y };
         island->position = yume::vec2<float>{ static_cast<float>(dis_x(gen)), static_cast<float>(dis_y(gen)) };
         airstrip->size = island->size;
         airstrip->position = island->position;
@@ -320,6 +323,16 @@ public:
         heightText->updateText(std::string("Height: ") + std::to_string(abs(550 - rocket->position.y) - 14), { 255, 255, 255, 255 }, renderer);
         winStreakText->updateText(std::string("Win Streak: ") + std::to_string(winStreak), { 255, 200, 200, 255 }, renderer);
 
+        float radianRotation = (rocket->rotation - 90) * (M_PI / 180.0f);
+
+        float boosterOffsetX = cos(radianRotation) * 0 - sin(radianRotation) * (rocket->size.y / 2.0f + rocketBoosterAnim->size.y / 2.0f - 42.0f);
+        float boosterOffsetY = sin(radianRotation) * 0 + cos(radianRotation) * (rocket->size.y / 2.0f + rocketBoosterAnim->size.y / 2.0f - 42.0f);
+
+        rocketBoosterAnim->position = yume::vec2<float>{ rocket->position.x + boosterOffsetX, rocket->position.y + boosterOffsetY };
+        rocketBoosterAnim->rotation = rocket->rotation;
+
+        rocketBoosterAnim->update(rocketBoosterAnimFiles, 0.2f, deltaTime, renderer);
+
         Mix_VolumeChunk(booster, rocket->thrust * 7.5f);
 
         if (rocket->thrust > 1.0f && rocket->getEngineState()) {
@@ -371,7 +384,11 @@ public:
 
         background->render(renderer);
 
+        if (!rocket->grounded && rocket->engine_enable && rocket->thrust >= 2.0f) {
+            rocketBoosterAnim->render(renderer);
+        }
         rocket->render(renderer);
+
         island->render(renderer);
         airstrip->render(renderer);
         // earth->render(renderer);
@@ -428,6 +445,7 @@ public:
         delete winCounterText;
         delete howToPlay;
         delete turnOnEngineText;
+        delete rocketBoosterAnim;
 
         Mix_FreeChunk(woosh);
         Mix_FreeChunk(booster);
