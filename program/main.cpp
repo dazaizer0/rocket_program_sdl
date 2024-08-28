@@ -169,6 +169,11 @@ protected:
     std::vector<std::string> rocketBoosterAnimFiles{ "booster1.png", "booster2.png", "booster3.png" };
     Earth* earth = new Earth(yume::vec2<float>{ 0, 500 }, yume::vec2<float>{ 1000, 1000 }, renderer);
     Island* island = new Island(yume::vec2<float>{ 200, 320 }, yume::vec2<float>{ 100, 66 }, renderer);
+    int islandStage = 0;
+    float islandX2Right{};
+    float islandX2Left{};
+    bool movingRight{};
+
     Texture* airstrip = new Texture(yume::vec2<float>{ 200, 320 }, yume::vec2<float>{ 100, 66 }, "airstrip.png", renderer);
     Texture* background = new Texture(yume::vec2<float>{ 0, 0 }, yume::vec2<float>{ 800, 600 }, "background.png", renderer);
     Texture* howToPlay = new Texture(yume::vec2<float>{ 0, 0 }, yume::vec2<float>{ 800, 600 }, "howtoplay.png", renderer);
@@ -180,11 +185,13 @@ protected:
     Text* rotationText = new Text(yume::vec2<int>{ 5, 115 }, 24, { 255, 255, 255, 255 }, "Rotation: ", renderer);
     Text* heightText = new Text(yume::vec2<int>{ 5, 150 }, 24, { 255, 255, 255, 255 }, "Height: ", renderer);
     Text* winStreakText = new Text(yume::vec2<int>{ 5, 175 }, 24, { 255, 255, 255, 255 }, "Win Streak: ", renderer);
-    Text* turnOnEngineText = new Text(yume::vec2<int>{ 280, 300 }, 32, { 255, 0, 0, 255 }, "TURN ON THE ENGINE!", renderer);
+    Text* stageText = new Text(yume::vec2<int>{ 5, 200 }, 24, { 255, 255, 255, 255 }, "Stage: ", renderer);
+    Text* turnOnEngineText = new Text(yume::vec2<int>{ 260, 100 }, 32, { 255, 0, 0, 255 }, "TURN ON THE ENGINE!", renderer);
 
     Text* winCounterText = new Text(yume::vec2<int>{ 350, 300 }, 32, { 0, 0, 0, 255 }, "3.0", renderer);
     Text* winText = new Text(yume::vec2<int>{ 325, 300 }, 36, { 0, 0, 0, 255 }, "YOU WON!", renderer);
-    Text* winText2 = new Text(yume::vec2<int>{ 325, 345 }, 16, { 0, 0, 0, 255 }, "press R to continue!", renderer);
+    Text* winText2 = new Text(yume::vec2<int>{ 335, 345 }, 16, { 0, 0, 0, 255 }, "press R to continue!", renderer);
+    Text* winText3 = new Text(yume::vec2<int>{ 260, 360 }, 16, { 0, 0, 0, 255 }, "Press R to continue and thanks for playing!", renderer);
 
     Text* lossText = new Text(yume::vec2<int>{ 326, 300 }, 36, { 0, 0, 0, 255 }, "YOU LOST..", renderer);
     Text* lossText2 = new Text(yume::vec2<int>{ 330, 335 }, 16, { 0, 0, 0, 255 }, "press R to restart level..", renderer);
@@ -196,6 +203,7 @@ protected:
     float win_timer{};
     int winStreak = 0;
     bool win = false;
+    bool winPredict = false;
     bool lost = false;
     bool startScreen = true;
     int channel = -1;
@@ -218,13 +226,22 @@ public:
         if (win) {
             island->size = yume::vec2<float>{ island->size.x - 6.5f, island->size.y - 6.5f };
             winStreak += 1;
+            islandStage += 1;
         }
-
         if (lost) winStreak = 0;
+
+        if (!lost && !win && winPredict) {
+            winPredict = false;
+        }
 
         win = false;
         lost = false;
         rocket->on_island = false;
+
+        if (islandStage >= 3 && islandStage <= 5) {
+            islandX2Left = island->position.x - 50.0f;
+            islandX2Right = island->position.x + 50.0f;
+        }
     }
 
     virtual void start() override {
@@ -246,9 +263,9 @@ public:
             quitScene();
         }
 
-        //if (event.button.button == SDL_BUTTON_LEFT) {
-        //    rocket->position = yume::vec2<float>{ (float)mousePos.x, (float)mousePos.y };
-        //}
+        if (event.button.button == SDL_BUTTON_LEFT) {
+            // rocket->position = yume::vec2<float>{ (float)mousePos.x, (float)mousePos.y };
+        }
 
         if (state_1[SDL_SCANCODE_ESCAPE]) {
             manager->switchScene(0);
@@ -298,9 +315,30 @@ public:
         lastTime = currentTime;
 
         rocket->update(deltaTime);
-        island->update(&rocket->position, &rocket->size, &rocket->velocity, &rocket->grounded, &rocket->on_island, std::bind(&Rocket::levelOut, rocket));
+        if (islandStage <= 9) {
+            island->update(&rocket->position, &rocket->size, &rocket->velocity, &rocket->grounded, &rocket->on_island, std::bind(&Rocket::levelOut, rocket));
+            airstrip->position = island->position;
+        }
 
-        if (win) {
+        if (islandStage >= 2 && islandStage <= 4) {
+            if (!rocket->on_island) {
+                if (island->position.x >= islandX2Right) {
+                    movingRight = false;
+                }
+                else if (island->position.x <= islandX2Left) {
+                    movingRight = true;
+                }
+
+                if (movingRight) {
+                    island->position.x += deltaTime * islandStage * 5.0f;
+                }
+                else {
+                    island->position.x -= deltaTime * islandStage * 5.0f;
+                }
+            }
+        }
+
+        if (winPredict) {
             win_timer += 1 * deltaTime;
             winCounterText->updateText(std::to_string(4.0f - win_timer), { 0, 0, 0, 255 }, renderer);
         }
@@ -322,6 +360,7 @@ public:
         rotationText->updateText(std::string("Rotation: ") + std::to_string(rocket->rotation), { 255, 255, 255, 255 }, renderer);
         heightText->updateText(std::string("Height: ") + std::to_string(abs(550 - rocket->position.y) - 14), { 255, 255, 255, 255 }, renderer);
         winStreakText->updateText(std::string("Win Streak: ") + std::to_string(winStreak), { 255, 200, 200, 255 }, renderer);
+        stageText->updateText(std::string("Stage: ") + std::to_string(islandStage), { 255, 255, 255, 255 }, renderer);
 
         float radianRotation = (rocket->rotation - 90) * (M_PI / 180.0f);
 
@@ -368,6 +407,18 @@ public:
 
         if (rocket->grounded == true) {
             if (rocket->is_stable == true && rocket->on_island == true && rocket->previousVelocity.length() <= 40.0f) {
+                winPredict = true;
+
+                if (islandStage == 9) {
+                    winText2->updateText("CONGRATULATIONS! You've completed the game! Now you can fly your rocket around without any target!", { 0, 0, 0, 255 }, renderer);
+                    winText2->position = yume::vec2<int>{ 10, 345 };
+                }
+            }
+            else {
+                winPredict = false;
+            }
+
+            if (rocket->is_stable == true && rocket->on_island == true && rocket->previousVelocity.length() <= 40.0f && win_timer > 3.9f) {
                 win = true;
                 lost = false;
             }
@@ -375,6 +426,9 @@ public:
                 lost = true;
                 win = false;
             }
+        }
+        else {
+            winPredict = false;
         }
     }
 
@@ -389,8 +443,10 @@ public:
         }
         rocket->render(renderer);
 
-        island->render(renderer);
-        airstrip->render(renderer);
+        if (islandStage <= 9) {
+            island->render(renderer);
+            airstrip->render(renderer);
+        }
         // earth->render(renderer);
         thrustText->render(renderer);
         velocityText->render(renderer);
@@ -399,13 +455,17 @@ public:
         rotationText->render(renderer);
         heightText->render(renderer);
         winStreakText->render(renderer);
+        stageText->render(renderer);
 
         if (win && win_timer > 4.0f) {
             winText->render(renderer);
             winText2->render(renderer);
+            if (islandStage >= 9) {
+                winText3->render(renderer);
+            }
         }
 
-        if (win && win_timer < 4.0f) {
+        if (winPredict && win_timer < 4.0f) {
             winCounterText->render(renderer);
         }
 
@@ -439,17 +499,26 @@ public:
         delete heightText;
         delete winText;
         delete winText2;
+        delete winText3;
         delete lossText;
         delete lossText2;
         delete winStreakText;
+        delete stageText;
         delete winCounterText;
         delete howToPlay;
-        delete turnOnEngineText;
         delete rocketBoosterAnim;
+        delete turnOnEngineText;
 
-        Mix_FreeChunk(woosh);
-        Mix_FreeChunk(booster);
+        if (woosh) {
+            Mix_FreeChunk(woosh);
+        }
+        if (booster) {
+            Mix_FreeChunk(booster);
+        }
+
+        Mix_CloseAudio();
     }
+
 };
 
 int main(int argc, char* args[]) {
