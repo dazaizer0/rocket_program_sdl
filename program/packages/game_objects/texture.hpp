@@ -19,7 +19,7 @@ public:
 	~Texture();
 
 private:
-	SDL_Texture* texture;
+	SDL_Texture* texture{};
 	float timer{ 0.0f };
 	int actualAnimIndex{ 0 };
 };

@@ -5,7 +5,7 @@
 
 class Earth {
 private:
-	SDL_Texture* earthTexture;
+	SDL_Texture* earthTexture{};
 
 	SDL_Texture* loadTexture(const char* file, SDL_Renderer* ren);
 

@@ -115,12 +115,12 @@ void Rocket::rotateRight() {
 }
 
 void Rocket::turnOnEngine() {
-    std::cout << "The engine has been turned on.\n";
+    // std::cout << "The engine has been turned on.\n";
     engine_enable = true;
 }
 
 void Rocket::turnOffEngine() {
-    std::cout << "The engine has been turned off.\n";
+    // std::cout << "The engine has been turned off.\n";
     thrust = 0.0f;
     engine_enable = false;
 }
