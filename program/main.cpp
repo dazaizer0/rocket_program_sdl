@@ -238,7 +238,7 @@ public:
         lost = false;
         rocket->on_island = false;
 
-        if (islandStage >= 3 && islandStage <= 5) {
+        if (islandStage >= 2 && islandStage <= 4) {
             islandX2Left = island->position.x - 50.0f;
             islandX2Right = island->position.x + 50.0f;
         }
@@ -392,6 +392,7 @@ public:
 
             std::cout << "\n WIN: " << win << '\n';
             std::cout << " LOSS: " << lost << '\n';
+            std::cout << movingRight << '\n' << islandX2Left << '\n' << islandX2Right << '\n';
         }
 
         if (rocket->position.x > 230.0f && rocket->position.x < 320.0f && rocket->position.y > 425.0f) {
