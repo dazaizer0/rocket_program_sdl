@@ -95,7 +95,7 @@ public:
     Menu(SDL_Renderer* rend, SDL_Window* wind, SceneManager* mgr)
         : Scene(rend, wind, mgr),
         titleText(std::make_unique<Text>(yume::vec2<int>{ 150, 60 }, 50, SDL_Color{ 250, 250, 250, 255 }, "  The Rocket Program ", renderer)),
-        creatorText(std::make_unique<Text>(yume::vec2<int>{ 130, 545 }, 18, SDL_Color{ 255, 255, 255, 255 }, "The game is made by dazai. Credits: Background is made by Emilia", renderer)),
+        creatorText(std::make_unique<Text>(yume::vec2<int>{ 125, 545 }, 18, SDL_Color{ 255, 255, 255, 255 }, "The game is made by dazai. Credits: Background is made by Emilia", renderer)),
         pressText(std::make_unique<Text>(yume::vec2<int>{ 125, 565 }, 18, SDL_Color{ 255, 255, 255, 255 }, "Select option by pressing space, switch options by pressing arrows.", renderer)),
         startText(std::make_unique<Text>(yume::vec2<int>{ 360, 240 }, 32, SDL_Color{ 0, 0, 0, 255 }, "Start", renderer)),
         quitText(std::make_unique<Text>(yume::vec2<int>{ 360, 300 }, 32, SDL_Color{ 0, 0, 0, 255 }, "Quit", renderer)),
