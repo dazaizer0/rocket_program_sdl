@@ -180,12 +180,11 @@ protected:
 
     Text* thrustText = new Text(yume::vec2<int>{ 5, 15 }, 24, { 255, 255, 255, 255 }, "Thrust: ", renderer);
     Text* velocityText = new Text(yume::vec2<int>{ 5, 40 }, 24, { 255, 255, 255, 255 }, "Velocity: ", renderer);
-    Text* velocityLenText = new Text(yume::vec2<int>{ 5, 65 }, 24, { 255, 255, 255, 255 }, "Velocity vector length: ", renderer);
-    Text* engineText = new Text(yume::vec2<int>{ 5, 90 }, 24, { 255, 255, 255, 255 }, "Engine: ", renderer);
-    Text* rotationText = new Text(yume::vec2<int>{ 5, 115 }, 24, { 255, 255, 255, 255 }, "Rotation: ", renderer);
-    Text* heightText = new Text(yume::vec2<int>{ 5, 150 }, 24, { 255, 255, 255, 255 }, "Height: ", renderer);
-    Text* winStreakText = new Text(yume::vec2<int>{ 5, 175 }, 24, { 255, 255, 255, 255 }, "Win Streak: ", renderer);
-    Text* stageText = new Text(yume::vec2<int>{ 5, 200 }, 24, { 255, 255, 255, 255 }, "Stage: ", renderer);
+    Text* engineText = new Text(yume::vec2<int>{ 5, 65 }, 24, { 255, 255, 255, 255 }, "Engine: ", renderer);
+    Text* rotationText = new Text(yume::vec2<int>{ 5, 90 }, 24, { 255, 255, 255, 255 }, "Rotation: ", renderer);
+    Text* heightText = new Text(yume::vec2<int>{ 5, 115 }, 24, { 255, 255, 255, 255 }, "Height: ", renderer);
+    Text* winStreakText = new Text(yume::vec2<int>{ 5, 140 }, 24, { 255, 255, 255, 255 }, "Win Streak: ", renderer);
+    Text* stageText = new Text(yume::vec2<int>{ 5, 165 }, 24, { 255, 255, 255, 255 }, "Stage: ", renderer);
     Text* turnOnEngineText = new Text(yume::vec2<int>{ 260, 100 }, 32, { 255, 0, 0, 255 }, "TURN ON THE ENGINE!", renderer);
 
     Text* winCounterText = new Text(yume::vec2<int>{ 350, 300 }, 32, { 0, 0, 0, 255 }, "3.0", renderer);
@@ -263,9 +262,9 @@ public:
             quitScene();
         }
 
-        if (event.button.button == SDL_BUTTON_LEFT) {
-            // rocket->position = yume::vec2<float>{ (float)mousePos.x, (float)mousePos.y };
-        }
+        // if (event.button.button == SDL_BUTTON_LEFT) {
+        //     rocket->position = yume::vec2<float>{ (float)mousePos.x, (float)mousePos.y };
+        // }
 
         if (state_1[SDL_SCANCODE_ESCAPE]) {
             manager->switchScene(0);
@@ -349,7 +348,6 @@ public:
 
         thrustText->updateText(std::string("Thrust: ") + std::to_string(rocket->thrust), { 255, 255, 255, 255 },  renderer);
         velocityText->updateText(std::string("Velocity: ") + std::to_string(rocket->velocity.length()), { 255, 255, 255, 255 }, renderer);
-        velocityLenText->updateText(std::string("Velocity vector length: ") + std::to_string(rocket->velocity.length()), { 150, 20, 20 }, renderer);
 
         if (rocket->getEngineState()) {
             engineText->updateText(std::string("Engine: On"), { 255, 255, 255, 255 }, renderer);
@@ -383,15 +381,6 @@ public:
         if ((!rocket->engine_enable || rocket->thrust <= 1.0f) && channel != -1) {
             Mix_HaltChannel(channel);
             channel = -1;
-        }
-
-        timer += 1.0f * deltaTime;
-        if (timer >= 2.0f) {
-            rocket->printLog();
-            timer = 0.0f;
-
-            std::cout << "\n WIN: " << win << '\n';
-            std::cout << " LOSS: " << lost << '\n';
         }
 
         if (rocket->position.x > 230.0f && rocket->position.x < 320.0f && rocket->position.y > 425.0f) {
@@ -450,7 +439,6 @@ public:
         // earth->render(renderer);
         thrustText->render(renderer);
         velocityText->render(renderer);
-        velocityLenText->render(renderer);
         engineText->render(renderer);
         rotationText->render(renderer);
         heightText->render(renderer);
@@ -493,7 +481,6 @@ public:
         delete background;
         delete thrustText;
         delete velocityText;
-        delete velocityLenText;
         delete engineText;
         delete rotationText;
         delete heightText;
