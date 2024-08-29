@@ -39,6 +39,8 @@ private:
     int currentSceneIndex;
 
 public:
+    bool inGame{ false };
+
     SceneManager(SDL_Renderer* rend, SDL_Window* win)
         : renderer(rend), window(win), currentSceneIndex(0) {}
 
@@ -249,6 +251,8 @@ public:
 
         woosh = Mix_LoadWAV("woosh.wav");
         booster = Mix_LoadWAV("booster.wav");
+
+        manager->inGame = true;
     }
 
     virtual void handleEvents(SDL_Event& event) override {
@@ -496,16 +500,11 @@ public:
         delete rocketBoosterAnim;
         delete turnOnEngineText;
 
-        if (woosh) {
+        if (manager->inGame) {
             Mix_FreeChunk(woosh);
-        }
-        if (booster) {
             Mix_FreeChunk(booster);
         }
-
-        Mix_CloseAudio();
     }
-
 };
 
 int main(int argc, char* args[]) {
