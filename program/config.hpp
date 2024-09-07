@@ -29,5 +29,4 @@
 #include "packages/game_objects/texture.hpp"
 #include "packages/ui_objects/text.hpp"
 
-
 #endif

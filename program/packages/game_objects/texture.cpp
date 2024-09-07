@@ -13,7 +13,7 @@ SDL_Texture* Texture::loadTexture(const char* file, SDL_Renderer* ren) {
 
 Texture::Texture(yume::vec2<float> position_v, yume::vec2<float> size_v, const char* file_name, SDL_Renderer* renderer)
     : position(position_v), size(size_v), rotation(90) {
-    texture = loadTexture(file_name, renderer);
+    texture = position.vloadTexture(file_name, renderer); //  IN DEVELOPENT <- C++ TEST XDDD
 }
 
 void Texture::update(std::vector<std::string> fileNames, float duration, float deltaTime, SDL_Renderer* renderer) {
