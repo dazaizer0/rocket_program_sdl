@@ -92,13 +92,13 @@ bool Rocket::getEngineState() {
 
 void Rocket::increaseThrust() {
     if (thrust < max_thrust) {
-        thrust += 0.32f;
+        thrust += 0.4f; // 0.32f
     }
 }
 
 void Rocket::decreaseThrust() {
     if (thrust > 0) {
-        thrust -= 0.48f;
+        thrust -= 0.5f; // 0.48f
     }
 }
 

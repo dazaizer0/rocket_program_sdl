@@ -37,10 +37,11 @@ private:
     SDL_Window* window;
     std::vector<std::unique_ptr<Scene>> scenes;
     int currentSceneIndex;
+    bool quit;
 
 public:
     SceneManager(SDL_Renderer* rend, SDL_Window* win)
-        : renderer(rend), window(win), currentSceneIndex(0) {}
+        : renderer(rend), window(win), currentSceneIndex(0), quit(false) {}
 
     template<typename T, typename... Args>
     void addScene(Args&&... args) {
@@ -58,19 +59,23 @@ public:
         if (!scenes.empty()) {
             scenes[currentSceneIndex]->start();
 
-            while (!scenes[currentSceneIndex]->isQuit()) {
+            while (!quit && !scenes[currentSceneIndex]->isQuit()) {
                 SDL_Event event;
                 while (SDL_PollEvent(&event)) {
+                    if (event.type == SDL_QUIT) {
+                        quitProgram();
+                    }
                     scenes[currentSceneIndex]->handleEvents(event);
                 }
 
                 scenes[currentSceneIndex]->update();
-
                 scenes[currentSceneIndex]->render();
             }
         }
+    }
 
-        std::cout << "THE PROGRAM HAS BEEN ENDED\n";
+    void quitProgram() {
+        quit = true;
     }
 
     int getCurrentSceneIndex() {
@@ -86,10 +91,13 @@ protected:
     std::unique_ptr<Text> pressText;
     std::unique_ptr<Text> startText;
     std::unique_ptr<Text> quitText;
+    std::unique_ptr<Text> htpText;
     std::unique_ptr<Texture> background;
+    std::unique_ptr<Texture> howToPlay;
 
     // State Management
     int selectedOptionIndex{ 0 };
+    bool howToPlayVisible{ false };
 
 public:
     Menu(SDL_Renderer* rend, SDL_Window* wind, SceneManager* mgr)
@@ -99,8 +107,9 @@ public:
         pressText(std::make_unique<Text>(yume::vec2<int>{ 125, 565 }, 18, SDL_Color{ 255, 255, 255, 255 }, "Select option by pressing space, switch options by pressing arrows.", renderer)),
         startText(std::make_unique<Text>(yume::vec2<int>{ 360, 240 }, 32, SDL_Color{ 0, 0, 0, 255 }, "Start", renderer)),
         quitText(std::make_unique<Text>(yume::vec2<int>{ 360, 300 }, 32, SDL_Color{ 0, 0, 0, 255 }, "Quit", renderer)),
-        background(std::make_unique<Texture>(yume::vec2<float>{ 0, 0 }, yume::vec2<float>{ 800, 600 }, "background.png", renderer))
-    {
+        htpText(std::make_unique<Text>(yume::vec2<int>{ 310, 360 }, 32, SDL_Color{ 0, 0, 0, 255 }, "How to play", renderer)),
+        background(std::make_unique<Texture>(yume::vec2<float>{ 0, 0 }, yume::vec2<float>{ 800, 600 }, "background.png", renderer)),
+        howToPlay(std::make_unique<Texture>(yume::vec2<float>{ 0, 0 }, yume::vec2<float>{ 800, 600 }, "howtoplay.png", renderer)) {
     }
 
     virtual void start() override {
@@ -115,12 +124,19 @@ public:
             quitScene();
         }
 
+        if (state[SDL_SCANCODE_RETURN] && howToPlayVisible) {
+            howToPlayVisible = false;
+        }
+
         if (state[SDL_SCANCODE_SPACE]) {
             if (selectedOptionIndex == 0) {
                 manager->switchScene(1);
             }
             else if (selectedOptionIndex == 1) {
-                quitScene();
+                manager->quitProgram();
+            }
+            else if (selectedOptionIndex == 2) {
+                howToPlayVisible = true;
             }
         }
 
@@ -130,16 +146,29 @@ public:
         else if (state[SDL_SCANCODE_DOWN] && selectedOptionIndex == 0) {
             selectedOptionIndex = 1;
         }
+        else if (state[SDL_SCANCODE_DOWN] && selectedOptionIndex == 1) {
+            selectedOptionIndex = 2;
+        }
+        if (state[SDL_SCANCODE_UP] && selectedOptionIndex == 2) {
+            selectedOptionIndex = 1;
+        }
     }
 
     virtual void update() override {
         if (selectedOptionIndex == 0) {
             startText->updateText("> Start", { 0, 0, 0, 255 }, renderer);
             quitText->updateText("Quit", { 0, 0, 0, 255 }, renderer);
+            htpText->updateText("How to play", { 0, 0, 0, 255 }, renderer);
         }
         else if (selectedOptionIndex == 1) {
             quitText->updateText("> Quit", { 0, 0, 0, 255 }, renderer);
             startText->updateText("Start", { 0, 0, 0, 255 }, renderer);
+            htpText->updateText("How to play", { 0, 0, 0, 255 }, renderer);
+        }
+        else if (selectedOptionIndex == 2) {
+            quitText->updateText("Quit", { 0, 0, 0, 255 }, renderer);
+            startText->updateText("Start", { 0, 0, 0, 255 }, renderer);
+            htpText->updateText("> How to play", { 0, 0, 0, 255 }, renderer);
         }
     }
 
@@ -151,8 +180,11 @@ public:
         pressText->render(renderer);
         startText->render(renderer);
         quitText->render(renderer);
+        htpText->render(renderer);
         creatorText->render(renderer);
         titleText->render(renderer);
+
+        if (howToPlayVisible == true) howToPlay->render(renderer);
 
         SDL_RenderPresent(renderer);
     }
@@ -180,7 +212,6 @@ protected:
     std::unique_ptr<Island> island;
     std::unique_ptr<Texture> airstrip;
     std::unique_ptr<Texture> background;
-    std::unique_ptr<Texture> howToPlay;
 
     // Texts
     std::unique_ptr<Text> thrustText;
@@ -213,11 +244,11 @@ protected:
     bool win{ false };
     bool winPredict{ false };
     bool lost{ false };
-    bool startScreen{ true };
     int channel{ -1 };
     bool engineNotification{ false };
     bool uiEnabled{ true };
     bool keyPressedLastFrame{ false };
+    float restartTimer = 0.0f;
 
 public:
     Game(SDL_Renderer* rend, SDL_Window* wind, SceneManager* mgr)
@@ -228,7 +259,6 @@ public:
         island(std::make_unique<Island>(yume::vec2<float>{ 200, 320 }, yume::vec2<float>{ 100, 66 }, renderer)),
         airstrip(std::make_unique<Texture>(yume::vec2<float>{ 200, 320 }, yume::vec2<float>{ 100, 66 }, "airstrip.png", renderer)),
         background(std::make_unique<Texture>(yume::vec2<float>{ 0, 0 }, yume::vec2<float>{ 800, 600 }, "background.png", renderer)),
-        howToPlay(std::make_unique<Texture>(yume::vec2<float>{ 0, 0 }, yume::vec2<float>{ 800, 600 }, "howtoplay.png", renderer)),
         thrustText(std::make_unique<Text>(yume::vec2<int>{ 5, 15 }, 24, SDL_Color{ 255, 255, 255, 255 }, "Thrust: ", renderer)),
         velocityText(std::make_unique<Text>(yume::vec2<int>{ 5, 40 }, 24, SDL_Color{ 255, 255, 255, 255 }, "Velocity: ", renderer)),
         engineText(std::make_unique<Text>(yume::vec2<int>{ 5, 65 }, 24, SDL_Color{ 255, 255, 255, 255 }, "Engine: ", renderer)),
@@ -288,7 +318,7 @@ public:
         const Uint8* state = SDL_GetKeyboardState(NULL);
         Uint32 mouse_state = SDL_GetMouseState(&mousePos.x, &mousePos.y);
 
-        if (event.type == SDL_QUIT || state[SDL_SCANCODE_ESCAPE]) {
+        if (event.type == SDL_QUIT) {
             quitScene();
         }
 
@@ -296,12 +326,9 @@ public:
             manager->switchScene(0);
         }
 
-        if (state[SDL_SCANCODE_RETURN]) {
-            startScreen = false;
-        }
-
-        if (state[SDL_SCANCODE_R]) { // Restart scene
+        if (state[SDL_SCANCODE_R] && restartTimer == 1.0f) { // Restart scene
             restartProgress();
+            restartTimer = 0.0f;
         }
 
         if (state[SDL_SCANCODE_W]) {
@@ -348,6 +375,11 @@ public:
         Uint32 currentTime = SDL_GetTicks();
         float deltaTime = (currentTime - lastTime) / 1000.0f;
         lastTime = currentTime;
+
+        restartTimer += 1 * deltaTime;
+        if (restartTimer >= 1.0f) {
+            restartTimer = 1.0f;
+        }
 
         rocket->update(deltaTime);
         if (islandStage <= 9) {
@@ -499,11 +531,7 @@ public:
             lossText2->render(renderer);
         }
 
-        if (startScreen) {
-            howToPlay->render(renderer);
-        }
-
-        if (engineNotification && !startScreen && !win && !lost) {
+        if (engineNotification && !win && !lost) {
             turnOnEngineText->render(renderer);
         }
 
