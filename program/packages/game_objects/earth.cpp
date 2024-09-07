@@ -2,7 +2,7 @@
 
 Earth::Earth(yume::vec2<float> position_v, yume::vec2<float> size_v, SDL_Renderer* renderer)
     : position(position_v), size(yume::vec2<float>{ size_v.x, size_v.x }), rotation(90), radius(size.x / 2) {
-	earthTexture = renderManager.loadTexture("earth.png", renderer);
+	earthTexture = renderManager.loadTexture("res/earth.png", renderer);
 }
 
 void Earth::update(float deltaTime) {

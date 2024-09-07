@@ -2,7 +2,7 @@
 
 Rocket::Rocket(yume::vec2<float> position_v, yume::vec2<float> size_v, SDL_Renderer* renderer)
     : position(position_v), size(size_v), velocity(yume::vec2<float>(0, 0)), rotation(90), thrust(0), gravity(9.81), thrustPower(1.0), rotationalVelocity(0.0f), grounded(false), on_island(false) {
-    rocketTexture = renderManager.loadTexture("rocket.png", renderer);
+    rocketTexture = renderManager.loadTexture("res/rocket.png", renderer);
 }
 
 void Rocket::levelOut() {

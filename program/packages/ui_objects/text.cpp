@@ -2,7 +2,7 @@
 #include <string>
 
 Text::Text(yume::vec2<int> position_v, int font_size, SDL_Color color, std::string text_v, SDL_Renderer* renderer)
-	: position(position_v), font(TTF_OpenFont("IBMPlexSans-Medium.ttf", font_size)), textColor(color), text(text_v) {
+	: position(position_v), font(TTF_OpenFont("res/IBMPlexSans-Medium.ttf", font_size)), textColor(color), text(text_v) {
 	textSurface = TTF_RenderText_Solid(font, text.c_str(), textColor);
 	textTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
 	SDL_FreeSurface(textSurface);
