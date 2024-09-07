@@ -7,8 +7,7 @@ class Rocket {
 private:
     const float max_thrust{ 16.0 };
     const float air_resistance_factor{ 0.981f }; // 0.98f
-
-    SDL_Texture* loadTexture(const char* file, SDL_Renderer* ren);
+    yume::RenderManager renderManager;
 
 public:
     yume::vec2<float> position;

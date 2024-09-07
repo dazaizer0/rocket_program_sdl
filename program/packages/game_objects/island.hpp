@@ -9,8 +9,6 @@ public:
 	yume::vec2<float> position;
 	yume::vec2<float> size;
 
-	SDL_Texture* loadTexture(const char* file, SDL_Renderer* ren);
-
 	Island(yume::vec2<float> position_v, yume::vec2<float> size_v, SDL_Renderer* renderer);
 
 	void update(yume::vec2<float>* rocket_position, yume::vec2<float>* rocket_size, yume::vec2<float>* rocket_velocity, bool* rocket_grounded, bool* rocket_on_island, std::function<void()> lvlOut);
@@ -20,6 +18,7 @@ public:
 
 private:
 	SDL_Texture* islandTexture{};
+	yume::RenderManager renderManager;
 };
 
 #endif

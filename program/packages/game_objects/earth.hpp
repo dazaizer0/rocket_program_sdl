@@ -6,8 +6,7 @@
 class Earth {
 private:
 	SDL_Texture* earthTexture{};
-
-	SDL_Texture* loadTexture(const char* file, SDL_Renderer* ren);
+	yume::RenderManager renderManager;
 
 public:
 	yume::vec2<float> position;

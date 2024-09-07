@@ -1,20 +1,7 @@
 #ifndef YUME_MATH
 #define YUME_MATH
 
-#include <iostream>
-#include <cmath>
-
-#include <SDL2/SDL.h>
-
-#if (WIN32)
-#include <SDL_image.h>
-#include <SDL_mixer.h>
-#include <SDL_ttf.h>
-#else
-#include <SDL2/SDL_image.h>
-#include <SDL2/SDL_mixer.h>
-#include <SDL2/SDL_ttf.h>
-#endif
+#include "../../config.hpp"
 
 namespace yume {
 
@@ -73,17 +60,6 @@ namespace yume {
         static vec2<T> DOWN() { return vec2<T>(T(0), T(1)); }
         static vec2<T> RIGHT() { return vec2<T>(T(1), T(0)); }
         static vec2<T> LEFT() { return vec2<T>(T(-1), T(0)); }
-
-        SDL_Texture* vloadTexture(const char* file, SDL_Renderer* ren) {
-            SDL_Surface* surface = IMG_Load(file);
-            if (surface == nullptr) {
-                printf("IMG_Load Error: %s\n", IMG_GetError());
-                return nullptr;
-            }
-            SDL_Texture* texture = SDL_CreateTextureFromSurface(ren, surface);
-            SDL_FreeSurface(surface);
-            return texture;
-        }
     };
 
 

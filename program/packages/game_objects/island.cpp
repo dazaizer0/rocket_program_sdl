@@ -1,19 +1,8 @@
 #include "island.hpp"
 
-SDL_Texture* Island::loadTexture(const char* file, SDL_Renderer* ren) {
-    SDL_Surface* surface = IMG_Load(file);
-    if (surface == nullptr) {
-        printf("IMG_Load Error: %s\n", IMG_GetError());
-        return nullptr;
-    }
-    SDL_Texture* texture = SDL_CreateTextureFromSurface(ren, surface);
-    SDL_FreeSurface(surface);
-    return texture;
-}
-
 Island::Island(yume::vec2<float> position_v, yume::vec2<float> size_v, SDL_Renderer* renderer)
     : position(position_v), size(size_v) {
-    islandTexture = loadTexture("island.png", renderer);
+    islandTexture = renderManager.loadTexture("island.png", renderer);
 }
 
 void Island::update(yume::vec2<float>* rocket_position, yume::vec2<float>* rocket_size, yume::vec2<float>* rocket_velocity, bool* rocket_grounded, bool* rocket_on_island, std::function<void()> lvlOut) {
