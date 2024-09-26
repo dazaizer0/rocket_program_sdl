@@ -129,5 +129,5 @@ void Rocket::printLog() {
 }
 
 Rocket::~Rocket() {
-    // delete rocketTexture;
+    SDL_DestroyTexture(rocketTexture);
 }

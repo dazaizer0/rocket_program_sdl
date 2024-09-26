@@ -6,7 +6,7 @@
 class Rocket {
 private:
     const float max_thrust{ 16.0 };
-    const float air_resistance_factor{ 0.981f }; // 0.98f
+    const float air_resistance_factor{ 0.98f }; // 0.98f
     yume::RenderManager renderManager;
 
 public:

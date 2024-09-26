@@ -9,21 +9,17 @@ void Texture::update(std::vector<std::string> fileNames, float duration, float d
     timer += deltaTime;
 
     if (timer >= duration) {
-        // Free the current texture before loading a new one
         if (texture != nullptr) {
             SDL_DestroyTexture(texture);
         }
 
-        // Load the next texture in the sequence
         texture = renderManager.loadTexture(fileNames[actualAnimIndex].c_str(), renderer);
 
-        // Update the index and wrap around if necessary
         actualAnimIndex += 1;
         if (actualAnimIndex >= fileNames.size()) {
             actualAnimIndex = 0;
         }
 
-        // Reset the timer
         timer = 0.0f;
     }
 }
@@ -35,4 +31,5 @@ void Texture::render(SDL_Renderer* renderer) {
 }
 
 Texture::~Texture() {
+    SDL_DestroyTexture(texture);
 }

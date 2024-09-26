@@ -50,15 +50,13 @@ add_executable(${PROJECT_NAME}
     program/config.hpp
 
     program/packages/math/math.hpp
+    program/packages/render/render.hpp
 
     program/packages/game_objects/rocket.cpp
     program/packages/game_objects/rocket.hpp
     
     program/packages/ui_objects/text.cpp
     program/packages/ui_objects/text.hpp
-
-    program/packages/game_objects/earth.cpp
-    program/packages/game_objects/earth.hpp
 
     program/packages/game_objects/island.cpp
     program/packages/game_objects/island.hpp

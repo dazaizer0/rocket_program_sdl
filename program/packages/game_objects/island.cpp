@@ -67,5 +67,5 @@ void Island::render(SDL_Renderer* renderer) {
 }
 
 Island::~Island() {
-    // delete islandTexture;
+    SDL_DestroyTexture(islandTexture);
 }

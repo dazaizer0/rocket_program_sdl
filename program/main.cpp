@@ -208,12 +208,11 @@ protected:
     Texture* rocketBoosterAnim;
 
     std::vector<std::string> rocketBoosterAnimFiles{ "res/booster1.png", "res/booster2.png", "res/booster3.png" };
-    std::unique_ptr<Earth> earth;
     std::unique_ptr<Island> island;
     std::unique_ptr<Texture> airstrip;
     std::unique_ptr<Texture> background;
 
-    // Texts
+    // UI
     std::unique_ptr<Text> thrustText;
     std::unique_ptr<Text> velocityText;
     std::unique_ptr<Text> engineText;
@@ -230,10 +229,10 @@ protected:
     std::unique_ptr<Text> lossText2;
 
     // Audio
-    Mix_Chunk* woosh;
-    Mix_Chunk* booster;
+    Mix_Chunk* woosh{};
+    Mix_Chunk* booster{};
 
-    // Game state variables
+    // Other variables
     int islandStage{ 0 };
     float islandX2Right{};
     float islandX2Left{};
@@ -255,7 +254,6 @@ public:
         : Scene(rend, wind, mgr),
         rocket(new Rocket(yume::vec2<float>{ 575, 410 }, yume::vec2<float>{ 32, 64 }, renderer)),
         rocketBoosterAnim(new Texture(yume::vec2<float>{ rocket->position.x, rocket->position.y }, yume::vec2<float>{ 32, 64 }, "res/booster1.png", renderer)),
-        earth(std::make_unique<Earth>(yume::vec2<float>{ 0, 500 }, yume::vec2<float>{ 1000, 1000 }, renderer)),
         island(std::make_unique<Island>(yume::vec2<float>{ 200, 320 }, yume::vec2<float>{ 100, 66 }, renderer)),
         airstrip(std::make_unique<Texture>(yume::vec2<float>{ 200, 320 }, yume::vec2<float>{ 100, 66 }, "res/airstrip.png", renderer)),
         background(std::make_unique<Texture>(yume::vec2<float>{ 0, 0 }, yume::vec2<float>{ 800, 600 }, "res/background.png", renderer)),

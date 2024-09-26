@@ -25,7 +25,6 @@
 #include "packages/math/math.hpp"
 #include "packages/render/render.hpp"
 #include "packages/game_objects/rocket.hpp"
-#include "packages/game_objects/earth.hpp"
 #include "packages/game_objects/island.hpp"
 #include "packages/game_objects/texture.hpp"
 #include "packages/ui_objects/text.hpp"
