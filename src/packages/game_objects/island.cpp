@@ -2,7 +2,7 @@
 
 Island::Island(yume::vec2<float> position_v, yume::vec2<float> size_v, SDL_Renderer* renderer)
     : position(position_v), size(size_v) {
-    islandTexture = renderManager.loadTexture("res/island.png", renderer);
+    islandTexture = renderManager.loadTexture("res/textures/island.png", renderer);
 }
 
 void Island::update(yume::vec2<float>* rocket_position, yume::vec2<float>* rocket_size, yume::vec2<float>* rocket_velocity, bool* rocket_grounded, bool* rocket_on_island, std::function<void()> lvlOut) {

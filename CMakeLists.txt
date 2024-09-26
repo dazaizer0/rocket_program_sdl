@@ -46,23 +46,23 @@ else()
 endif()
 
 add_executable(${PROJECT_NAME}
-    program/main.cpp
-    program/config.hpp
+    src/main.cpp
+    src/config.hpp
 
-    program/packages/math/math.hpp
-    program/packages/render/render.hpp
+    src/packages/math/math.hpp
+    src/packages/render/render.hpp
 
-    program/packages/game_objects/rocket.cpp
-    program/packages/game_objects/rocket.hpp
+    src/packages/game_objects/rocket.cpp
+    src/packages/game_objects/rocket.hpp
     
-    program/packages/ui_objects/text.cpp
-    program/packages/ui_objects/text.hpp
+    src/packages/ui_objects/text.cpp
+    src/packages/ui_objects/text.hpp
 
-    program/packages/game_objects/island.cpp
-    program/packages/game_objects/island.hpp
+    src/packages/game_objects/island.cpp
+    src/packages/game_objects/island.hpp
 
-    program/packages/game_objects/texture.cpp
-    program/packages/game_objects/texture.hpp
+    src/packages/game_objects/texture.cpp
+    src/packages/game_objects/texture.hpp
 )
 
 if (WIN32)
@@ -90,3 +90,5 @@ else()
         ${SDL2_ttf_INCLUDE_DIRS}
     )
 endif()
+
+file(COPY ${CMAKE_SOURCE_DIR}/res DESTINATION ${CMAKE_BINARY_DIR}/res)

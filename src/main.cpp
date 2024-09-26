@@ -108,8 +108,8 @@ public:
         startText(std::make_unique<Text>(yume::vec2<int>{ 360, 240 }, 32, SDL_Color{ 0, 0, 0, 255 }, "Start", renderer)),
         quitText(std::make_unique<Text>(yume::vec2<int>{ 360, 300 }, 32, SDL_Color{ 0, 0, 0, 255 }, "Quit", renderer)),
         htpText(std::make_unique<Text>(yume::vec2<int>{ 310, 360 }, 32, SDL_Color{ 0, 0, 0, 255 }, "How to play", renderer)),
-        background(std::make_unique<Texture>(yume::vec2<float>{ 0, 0 }, yume::vec2<float>{ 800, 600 }, "res/background.png", renderer)),
-        howToPlay(std::make_unique<Texture>(yume::vec2<float>{ 0, 0 }, yume::vec2<float>{ 800, 600 }, "res/howtoplay.png", renderer)) {
+        background(std::make_unique<Texture>(yume::vec2<float>{ 0, 0 }, yume::vec2<float>{ 800, 600 }, "res/textures/background.png", renderer)),
+        howToPlay(std::make_unique<Texture>(yume::vec2<float>{ 0, 0 }, yume::vec2<float>{ 800, 600 }, "res/textures/howtoplay.png", renderer)) {
     }
 
     virtual void start() override {
@@ -207,7 +207,7 @@ protected:
     Rocket* rocket;
     Texture* rocketBoosterAnim;
 
-    std::vector<std::string> rocketBoosterAnimFiles{ "res/booster1.png", "res/booster2.png", "res/booster3.png" };
+    std::vector<std::string> rocketBoosterAnimFiles{ "res/textures/booster1.png", "res/textures/booster2.png", "res/textures/booster3.png" };
     std::unique_ptr<Island> island;
     std::unique_ptr<Texture> airstrip;
     std::unique_ptr<Texture> background;
@@ -253,10 +253,10 @@ public:
     Game(SDL_Renderer* rend, SDL_Window* wind, SceneManager* mgr)
         : Scene(rend, wind, mgr),
         rocket(new Rocket(yume::vec2<float>{ 575, 410 }, yume::vec2<float>{ 32, 64 }, renderer)),
-        rocketBoosterAnim(new Texture(yume::vec2<float>{ rocket->position.x, rocket->position.y }, yume::vec2<float>{ 32, 64 }, "res/booster1.png", renderer)),
+        rocketBoosterAnim(new Texture(yume::vec2<float>{ rocket->position.x, rocket->position.y }, yume::vec2<float>{ 32, 64 }, "res/textures/booster1.png", renderer)),
         island(std::make_unique<Island>(yume::vec2<float>{ 200, 320 }, yume::vec2<float>{ 100, 66 }, renderer)),
-        airstrip(std::make_unique<Texture>(yume::vec2<float>{ 200, 320 }, yume::vec2<float>{ 100, 66 }, "res/airstrip.png", renderer)),
-        background(std::make_unique<Texture>(yume::vec2<float>{ 0, 0 }, yume::vec2<float>{ 800, 600 }, "res/background.png", renderer)),
+        airstrip(std::make_unique<Texture>(yume::vec2<float>{ 200, 320 }, yume::vec2<float>{ 100, 66 }, "res/textures/airstrip.png", renderer)),
+        background(std::make_unique<Texture>(yume::vec2<float>{ 0, 0 }, yume::vec2<float>{ 800, 600 }, "res/textures/background.png", renderer)),
         thrustText(std::make_unique<Text>(yume::vec2<int>{ 5, 15 }, 24, SDL_Color{ 255, 255, 255, 255 }, "Thrust: ", renderer)),
         velocityText(std::make_unique<Text>(yume::vec2<int>{ 5, 40 }, 24, SDL_Color{ 255, 255, 255, 255 }, "Velocity: ", renderer)),
         engineText(std::make_unique<Text>(yume::vec2<int>{ 5, 65 }, 24, SDL_Color{ 255, 255, 255, 255 }, "Engine: ", renderer)),
@@ -308,8 +308,8 @@ public:
         std::cout << "THE GAME SCENE HAS BEEN STARTED\n";
         lastTime = SDL_GetTicks();
 
-        woosh = Mix_LoadWAV("res/woosh.wav");
-        booster = Mix_LoadWAV("res/booster.wav");
+        woosh = Mix_LoadWAV("res/audios/woosh.wav");
+        booster = Mix_LoadWAV("res/audios/booster.wav");
     }
 
     virtual void handleEvents(SDL_Event& event) override {
@@ -554,7 +554,7 @@ int main(int argc, char* args[]) {
     TTF_Init();
 
     Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048);
-    Mix_Music* bgm = Mix_LoadMUS("res/8bitmusic.mp3");
+    Mix_Music* bgm = Mix_LoadMUS("res/audios/8bitmusic.mp3");
 
     Mix_VolumeMusic(96);
     Mix_PlayMusic(bgm, -1);
